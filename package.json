@@ -1,0 +1,69 @@
+{
+  "name": "movielist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "npm run prod",
+    "prod": "cross-env NODE_ENV=production babel-node App",
+    "dev": "cross-env NODE_ENV=development babel-node App",
+    "watch:dev": "nodemon",
+    "migrate": "babel-node configs/db.migrate.js"
+  },
+  "nodemonConfig": {
+    "exec": "npm run dev",
+    "watch": [
+      "src/**/*",
+      "src/*.js",
+      "./configs/*",
+      "*.js"
+    ],
+    "ignore": [
+      "**/__tests__/**",
+      "*.test.js",
+      "*.spec.js"
+    ]
+  },
+  "dependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@google-cloud/storage": "^5.2.0",
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
+    "bunyan": "^1.8.14",
+    "connect-redis": "^5.0.0",
+    "connect-session-sequelize": "^7.0.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "firebase": "^7.18.0",
+    "ioredis": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "mysql2": "^2.1.0",
+    "npm-run-all": "^4.1.5",
+    "passport": "^0.4.1",
+    "pg": "^8.3.0",
+    "pg-hstore": "^2.3.3",
+    "read-blob": "^1.1.0",
+    "redis": "^3.0.2",
+    "rimraf": "^3.0.2",
+    "sequelize": "^6.3.4",
+    "uuid": "^8.3.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.10.5",
+    "nodemon": "^2.0.4"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
