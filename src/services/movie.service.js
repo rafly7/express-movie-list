@@ -1,5 +1,8 @@
 import logEvent from '../events/myEmitter'
 import connection from '../../configs/db.connect';
+import Sequelize from 'sequelize';
+import Genre from '../models/genre';
+import Artist from '../models/artist';
 
 class MovieService {
   constructor(Movie) {
@@ -92,6 +95,92 @@ class MovieService {
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-PAGINATION-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async findMovieWithTitle(title) {
+    try {
+      const result = await this.Movie.findAll({
+        where: {
+          title: {
+            [Sequelize.Op.iLike]: `%${title}%`
+          }
+        }
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'FIND-MOVIE-WITH-TITLE-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async findMovieWithDescription(description) {
+    try {
+      const result = await this.Movie.findAll({
+        where: {
+          description: {
+            [Sequelize.Op.iLike]: `%${description}%`
+          }
+        }
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'FIND-MOVIE-WITH-DESCRIPTION-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async findMovieWithArtists(artist) {
+    try {
+      const {dataValues: {id}} = await Artist.findOne({
+        where: {
+          name: {
+            [Sequelize.Op.iLike]: artist
+          }
+        }
+      })
+      const result = await this.Movie.findAll({
+        where: {
+          artists: {
+            [Sequelize.Op.contains]: [id]
+          }
+        }
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'FIND-MOVIE-WITH-ARTISTS-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async findMovieWithGenres(genre) {
+    try {
+      const {dataValues: {id}} = await Genre.findOne({
+        where: {
+          name: {
+            [Sequelize.Op.iLike]: genre
+          }
+        }
+      })
+      const result = await this.Movie.findAll({
+        where: {
+          genres: {
+            [Sequelize.Op.contains]: [id]
+          }
+        }
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',
         logMessage: e
       })
     }

@@ -15,4 +15,29 @@ const mostViewedGenre = async (req, res, service) => {
     res.status(500).send('Something went wrong')
   }
 }
-export {mostViewedGenre, mostViewedMovie}
+
+const findWithQuery = async (req, res, service) => {
+  try {
+    if(req.query.title) {
+      const title = req.query.title
+      const movieWithTitle = await service.findMovieWithTitle(title)
+      res.status(200).json(movieWithTitle)
+    } else if(req.query.description) {
+      const description = req.query.description
+      const movieWithDescription = await service.findMovieWithDescription(description)
+      res.status(200).json(movieWithDescription)
+    } else if(req.query.artists) {
+      const artist = req.query.artists
+      const movieWithArtists = await service.findMovieWithArtists(artist)
+      res.status(200).json(movieWithArtists)
+    } else if(req.query.genres) {
+      const genre = req.query.genres
+      const movieWithGenres = await service.findMovieWithGenres(genre)
+      res.status(200).json(movieWithGenres)
+    }
+    res.status(400).send('Something went wrong')
+  } catch (e) {
+    res.status(400).send('Something went wrong')
+  }
+}
+export {mostViewedGenre, mostViewedMovie, findWithQuery}
