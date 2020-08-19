@@ -1,6 +1,5 @@
 import logEvent from '../events/myEmitter'
 import connection from '../../configs/db.connect';
-import Sequelize from 'sequelize';
 
 class MovieService {
   constructor(Movie) {
@@ -66,6 +65,33 @@ class MovieService {
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-MOST-VIEWED-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async getMovieWithPagination(page) {
+    try {
+      let limit = 5
+      let offset = 0
+      let result = await this.Movie.findAndCountAll()
+        .then((data) => {
+          let pages = Math.ceil(data.count / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({dataCount: data.count,pages: pages ,newOffset: offset})
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.Movie.findAll({
+        limit: limit,
+        offset: newOffset
+      }).then(movies => {
+          return Promise.resolve(movies)
+        }
+      )
+      return {current_page: parseInt(page), total_results: dataCount, total_pages: pages, results: result}
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'GET-PAGINATION-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
     }

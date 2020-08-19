@@ -1,6 +1,5 @@
 import logEvent from '../events/myEmitter'
 import connection from '../../configs/db.connect';
-import Sequelize from 'sequelize';
 
 class GenreService {
   constructor(genre) {

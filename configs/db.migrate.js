@@ -11,10 +11,16 @@ import Bcrypt from 'bcryptjs'
   await Connection.sync({force: true})
   let salt = await Bcrypt.genSalt(10)
   let password1 = await Bcrypt.hash('123456', salt)
+  let password2 = await Bcrypt.hash('654321', salt)
   let user1 = await User.create({
-    username: 'rafly',
-    email: 'rafly@gmail.com',
+    username: 'Dita',
+    email: 'dita@gmail.com',
     password: password1,
+  })
+  let user2 = await User.create({
+    username: 'Ava',
+    email: 'ava@gmail.com',
+    password: password2,
   })
 
   /**
@@ -141,6 +147,76 @@ import Bcrypt from 'bcryptjs'
     genres: [1,3,5]
   })
   let movie3 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie4 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie5 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie6 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie7 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie8 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie9 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie10 = await Movie.create({
     title: 'Neptune Wars',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',

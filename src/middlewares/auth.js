@@ -8,10 +8,17 @@ const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_H
 const catchAsync = handler =>
   (...args) => handler(...args).catch(args[2])
 
-export const logInAdmin = (req, userId) => {
-  req.session.userId = userId
+export const logInAdmin = (req, id) => {
+  req.session.adminId = id
   req.session.loggedIn = true
   req.session.role = 1
+  req.session.createdAt = Date.now()
+}
+
+export const logInUser = (req, id) => {
+  req.session.userId = id
+  req.session.loggedIn = true
+  req.session.role = 2
   req.session.createdAt = Date.now()
 }
 

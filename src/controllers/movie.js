@@ -65,4 +65,14 @@ const updateMovie = async (req, res, service) => {
     }
   })
 }
-export {addMovie, updateMovie}
+
+const getMovieWithPagination = async (req, res, service) => {
+  try {
+    const page = req.params.page
+    const result = await service.getMovieWithPagination(page)
+    res.status(200).json(result)
+  } catch (e) {
+    res.status(500).send('Something went wrong')
+  }
+}
+export {addMovie, updateMovie, getMovieWithPagination}

@@ -6,4 +6,12 @@ const cookieValidationAdmin = (req, res, next) => {
   }
 }
 
-export default cookieValidationAdmin
+const cookieValidationUser = (req, res, next) => {
+  if (req.session.role === 2) {
+      next()
+  } else {
+      res.sendStatus(401)
+  }
+}
+
+export {cookieValidationAdmin, cookieValidationUser}

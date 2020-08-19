@@ -21,7 +21,28 @@ class AuthService {
       }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
-        logTitle: 'CREATE-MOVIE-SERVICE-FAILED',
+        logTitle: 'AUTH-ADMIN-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+    return result
+  }
+
+  async authUser(body) {
+    let result;
+    try {
+      result = await this.Auth.findOne({
+        where: {
+          email: body.email
+        }
+      })
+      const matchPassword = Bcrypt.compareSync(body.password, result.password)
+      if(matchPassword) {
+        result = result.id
+      }
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'AUTH-USER-SERVICE-FAILED',
         logMessage: e
       })
     }
