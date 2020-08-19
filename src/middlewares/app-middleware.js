@@ -18,7 +18,7 @@ router.use(json());
 router.use(urlencoded({extended: true}))
 router.use(raw())
 
-// For Passport
+// For Session in Redis
 router.use(session({
   ...SESSION_OPTION,
   store: store

@@ -27,7 +27,7 @@ export const logOut = (req, res) =>
 
 export const restrict = (req, res, next) => {
   if(req.session.loggedIn) {
-    res.status(402).json({message: 'You have already logged in'})
+    res.status(400).json({message: 'You have already logged in'})
   } else {
     next()
   }

@@ -1,5 +1,5 @@
 import multer from 'multer'
-import {deleteFolderRecursive, uploadFile} from '../../configs/firestore'
+import {deleteFolderRecursive, uploadFile, updateFileFirebase} from '../../configs/firestore'
 
 let fileName;
 
@@ -42,13 +42,24 @@ const addMovie = async (req, res, service) => {
 const updateMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
     try {
-      if(!err) {
-        
-      } 
-      res.status(200)
-      res.send('succes')
+      let movie = req.body
+      let updateMovie;
+      if(req.file) {
+        let oldFileName = await service.getOldFileName(movie)
+        const {result_url, uuid} = await updateFileFirebase(oldFileName, fileName, req.file)
+        req.body.watch_url = result_url
+        req.body.file_name = uuid
+        updateMovie = await service.updateMovie(movie)
+        res.status(200)
+        res.json(updateMovie)
+      } else {
+        updateMovie = await service.updateMovie(movie)
+        res.status(200)
+        res.json(updateMovie)
+      }
     } catch (e) {
-      console.log(e)
+      res.status(500)
+      res.json({message: 'Something went wrong'})
     } finally {
       deleteFolderRecursive()
     }
