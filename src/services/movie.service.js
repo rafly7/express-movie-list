@@ -1,4 +1,6 @@
 import logEvent from '../events/myEmitter'
+import connection from '../../configs/db.connect';
+import Sequelize from 'sequelize';
 
 class MovieService {
   constructor(Movie) {
@@ -57,7 +59,19 @@ class MovieService {
     }
     return result
   }
+  async mostViewedMovie() {
+    try {
+      const [results] = await connection.query('SELECT * FROM public.movie WHERE viewer = (SELECT  MAX(viewer) FROM public.movie)')
+      return results[0]
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'GET-MOST-VIEWED-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
 }
+
 
 const convertArrayString = data => {
   return data.toString().split(',').map(Number)

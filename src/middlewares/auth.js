@@ -35,9 +35,9 @@ export const restrict = (req, res, next) => {
 
 export const auth = (req, res, next) => {
   if(req.session.loggedIn) {
-    res.status(401).json({message: 'You must be logged in'})
-  } else {
     next()
+  } else {
+    res.status(401).json({message: 'You must be logged in'})
   }
 }
 

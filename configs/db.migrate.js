@@ -130,5 +130,25 @@ import Bcrypt from 'bcryptjs'
     artists: [1,2,3,4],
     genres: [1,3,5]
   })
+  let movie2 = await Movie.create({
+    title: 'Planet of the apes',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
+  let movie3 = await Movie.create({
+    title: 'Neptune Wars',
+    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
+    duration: '0',
+    vote_count: '0',
+    watch_url: 'https://example.com',
+    file_name: 'efeufwf',
+    artists: [1,2,3,4],
+    genres: [1,3,5]
+  })
   process.exit(0)
 })();

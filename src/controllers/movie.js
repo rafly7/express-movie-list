@@ -65,5 +65,4 @@ const updateMovie = async (req, res, service) => {
     }
   })
 }
-
 export {addMovie, updateMovie}
