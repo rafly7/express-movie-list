@@ -259,6 +259,35 @@ class MovieService {
       throw new Error
     }
   }
+
+  async listAllUserVote(userId) {
+    try {
+      let result = await MovieVoteUser.findAll({
+        attributes: ['movie_id'],
+        where: {
+          user_id: userId
+        },
+        raw: true
+      }).then(data => {
+        return data.map(movie => movie.movie_id)
+      })
+      result = await this.Movie.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.in]: result
+          }
+        },
+        raw: true
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'LIST-ALL-VOTED-USER-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
 }
 
 

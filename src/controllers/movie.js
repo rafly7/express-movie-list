@@ -98,10 +98,21 @@ const unvoteMovie = async (req, res, service) => {
   }
 }
 
+const listAllUserVote = async (req, res, service) => {
+  try {
+    const userId = req.session.userId
+    const listAllVote = await service.listAllUserVote(userId)
+    res.status(200).json(listAllVote)
+  } catch (e) {
+    res.status(400).send('Something went wrong')
+  }
+}
+
 export {
   addMovie,
   updateMovie,
   getMovieWithPagination,
   voteMovie,
-  unvoteMovie
+  unvoteMovie,
+  listAllUserVote
 }
