@@ -29,24 +29,24 @@ class AuthService {
   }
 
   async authUser(body) {
-    let result;
     try {
-      result = await this.Auth.findOne({
+      const result = await this.Auth.findOne({
         where: {
           email: body.email
         }
       })
       const matchPassword = Bcrypt.compareSync(body.password, result.password)
       if(matchPassword) {
-        result = result.id
+        return result.id
       }
+      throw new Error
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'AUTH-USER-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
-    return result
   }
 }
 

@@ -75,4 +75,16 @@ const getMovieWithPagination = async (req, res, service) => {
     res.status(500).send('Something went wrong')
   }
 }
-export {addMovie, updateMovie, getMovieWithPagination}
+
+const voteMovie = async (req, res, service) => {
+  try {
+    const movieId = req.params.id
+    const userId = req.session.userId
+    const voted = await service.voteMovie(movieId, userId)
+    res.status(200).json(voted)
+  } catch (e) {
+    res.status(400).json({message: 'You already voted this movie'})
+  }
+}
+
+export {addMovie, updateMovie, getMovieWithPagination, voteMovie}
