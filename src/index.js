@@ -3,8 +3,10 @@ import express from 'express'
 import logEvent from './events/myEmitter'
 import appMiddleware from './middlewares/app-middleware'
 import appRoutes from './routers'
+import { dbAssociation } from './models/movie_vote_user'
 
 const app = express();
+dbAssociation()
 app.use(appMiddleware)
 app.use(appRoutes)
 app.get('/', (req, res) => {

@@ -1,15 +1,8 @@
 import Movie from './movie'
 import User from './user'
 import connection from '../../configs/db.connect'
-import Sequelize from 'sequelize'
 
 const MovieVoteUser = connection.define('movie_vote_user',{
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  }
 },{
   freezeTableName: true,
   tableName: 'movie_vote_user',

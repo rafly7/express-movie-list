@@ -3,7 +3,7 @@ import connection from '../../configs/db.connect';
 import Sequelize from 'sequelize';
 import Genre from '../models/genre';
 import Artist from '../models/artist';
-import { MovieVoteUser, dbAssociation } from '../models/movie_vote_user';
+import { MovieVoteUser } from '../models/movie_vote_user';
 
 class MovieService {
   constructor(Movie) {
@@ -189,15 +189,16 @@ class MovieService {
 
   async voteMovie(movie_id, user_id) {
     try {
-      dbAssociation()
-      console.log(movie_id)
-      console.log(user_id)
       const result = await MovieVoteUser.create({
         movie_id: movie_id,
         user_id: user_id
       })
-      if(result) return result
-      return true
+      if(result) {
+        const updateMovie = await this.Movie.findByPk(movie_id)
+        updateMovie.vote_count = updateMovie.vote_count+1
+        updateMovie.save()
+        return updateMovie
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'VOTED-MOVIE-SERVICE-FAILED',
