@@ -228,42 +228,5 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     artists: [1,2,3,4],
     genres: [1,3,5]
   })
-  // const id1 = await findIdMovie(movie1.title)
-  // const id2 = await findIdUser(user1.email)
-  // const id3 = await findIdMovie(movie2.title)
-  // const id4 = await findIdUser(user2.email)
-  // await MovieVoteUser.create({
-  //   movie_id: id1,
-  //   user_id: id2
-  // })
-  // await MovieVoteUser.create({
-  //   movie_id: id3,
-  //   user_id: id2
-  // })
-  // await MovieVoteUser.create({
-  //   movie_id: id1,
-  //   user_id: id4
-  // })
-  
   process.exit(0)
 })();
-
-const findIdMovie = async (title) =>{
-  const {dataValues: {id}} = await Movie.findOne({
-    where: {
-      title: title
-    }
-  })
-  console.log(id)
-  return id
-}
-
-const findIdUser = async (email) =>{
-  const {dataValues: {id}} = await User.findOne({
-    where: {
-      email: email
-    }
-  })
-  console.log(id)
-  return id
-}

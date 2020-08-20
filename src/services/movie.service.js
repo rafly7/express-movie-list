@@ -4,6 +4,7 @@ import Sequelize from 'sequelize';
 import Genre from '../models/genre';
 import Artist from '../models/artist';
 import { MovieVoteUser } from '../models/movie_vote_user';
+import User from '../models/user';
 
 class MovieService {
   constructor(Movie) {
@@ -207,7 +208,59 @@ class MovieService {
       throw new Error
     }
   }
+
+  async unvoteMovie(movieId, userId) {
+    try {
+      const result = connection.transaction(async (t) => {
+        const {dataValues: {movie_id}} = await MovieVoteUser.findOne({
+          attributes: ['movie_id'],
+          where: {
+            [Sequelize.Op.and]: [
+              {movie_id: movieId},
+              {user_id: userId}
+            ]
+          },
+          transaction: t
+        })
+        const {dataValues: {vote_count}} = await this.Movie.findOne({
+          where: {
+            id: movie_id
+          },
+          transaction: t
+        })
+        await this.Movie.update({vote_count: vote_count-1},{
+          where: {
+            id: movie_id
+          },
+          transaction: t
+        })
+        await MovieVoteUser.destroy({
+          where: {
+            [Sequelize.Op.and]: [
+              {movie_id: movieId},
+              {user_id: userId}
+            ]
+          },
+          transaction: t
+        })
+        return await this.Movie.findOne({
+          where: {
+            id: movie_id
+          },
+          transaction: t
+        })
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'UNVOTED-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
 }
+
 
 
 const convertArrayString = data => {

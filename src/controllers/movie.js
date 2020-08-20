@@ -87,4 +87,21 @@ const voteMovie = async (req, res, service) => {
   }
 }
 
-export {addMovie, updateMovie, getMovieWithPagination, voteMovie}
+const unvoteMovie = async (req, res, service) => {
+  try {
+    const movieId = req.params.id
+    const userId = req.session.userId
+    const unvoted = await service.unvoteMovie(movieId, userId)
+    res.status(200).json(unvoted)
+  } catch (e) {
+    res.status(400).json({message: 'Cannot unvoted movie before your voted'})
+  }
+}
+
+export {
+  addMovie,
+  updateMovie,
+  getMovieWithPagination,
+  voteMovie,
+  unvoteMovie
+}
