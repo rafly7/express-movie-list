@@ -19,7 +19,7 @@ const addMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
     const movie = req.body;
     if(err) {
-      res.status(404)
+      res.status(400)
       res.json({message: 'failed upload'})
     } else {
       try {

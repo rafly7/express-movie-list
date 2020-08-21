@@ -16,6 +16,15 @@ const mostViewedGenre = async (req, res, service) => {
   }
 }
 
+const mostVotedMovie = async (req, res, service) => {
+  try {
+    const mostVotedMovie = await service.mostVotedMovie()
+    res.status(200).json(mostVotedMovie)
+  } catch (e) {
+    res.status(500).send('Something went wrong')
+  }
+}
+
 const findWithQuery = async (req, res, service) => {
   try {
     if(req.query.title) {
@@ -40,4 +49,9 @@ const findWithQuery = async (req, res, service) => {
     res.status(400).send('Something went wrong')
   }
 }
-export {mostViewedGenre, mostViewedMovie, findWithQuery}
+export {
+  mostViewedGenre,
+  mostViewedMovie,
+  findWithQuery,
+  mostVotedMovie
+}

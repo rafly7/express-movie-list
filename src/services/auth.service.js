@@ -7,25 +7,24 @@ class AuthService {
   }
 
   async authAdmin(body) {
-    let result;
     try {
-      result = await this.Auth.findOne({
-        attributes: ['id','username','email','phoneNumber','password'],
+      const result = await this.Auth.findOne({
         where: {
           email: body.email
         }
       })
       const matchPassword = Bcrypt.compareSync(body.password, result.password)
       if(matchPassword) {
-        result = result.id
+        return result.id
       }
+      throw new Error
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'AUTH-ADMIN-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
-    return result
   }
 
   async authUser(body) {

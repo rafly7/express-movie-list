@@ -1,6 +1,5 @@
 import Sequelize from 'sequelize'
 import connection from '../../configs/db.connect'
-import User from './user'
 import Movie from './movie'
 
 const Viewer = connection.define('viewer', {
@@ -18,14 +17,6 @@ const Viewer = connection.define('viewer', {
       key: 'id'
     }
   },
-  // user_id: {
-  //   type: Sequelize.UUID,
-  //   allowNull: false,
-  //   references: {
-  //     model: User,
-  //     key: 'id'
-  //   }
-  // },
   createAt:{
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW,

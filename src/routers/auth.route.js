@@ -1,4 +1,4 @@
-import express from 'express'
+import {Router} from 'express'
 import { authAdmin, authAllLogout, authUser } from '../controllers/auth';
 import { restrict, auth } from '../middlewares/auth';
 import Admin from '../models/admin'
@@ -7,7 +7,7 @@ import AuthService from '../services/auth.service';
 
 const authAdminService = new AuthService(Admin)
 const authUserService = new AuthService(User)
-const router = express.Router();
+const router = Router();
 
 router.post('/admin', restrict, (req, res, next) => authAdmin(req, res, authAdminService))
 router.post('/user', restrict, (req, res, next) => authUser(req, res, authUserService))

@@ -4,7 +4,6 @@ import Sequelize from 'sequelize';
 import Genre from '../models/genre';
 import Artist from '../models/artist';
 import { MovieVoteUser } from '../models/movie_vote_user';
-import User from '../models/user';
 import Viewer from '../models/viewer';
 
 class MovieService {
@@ -26,6 +25,7 @@ class MovieService {
         logTitle: 'CREATE-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
     return result
   }
@@ -47,6 +47,7 @@ class MovieService {
         logTitle: 'UPDATE-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
     return result
   }
@@ -66,11 +67,27 @@ class MovieService {
   }
   async mostViewedMovie() {
     try {
-      const [results] = await connection.query('SELECT * FROM public.movie WHERE viewer = (SELECT  MAX(viewer) FROM public.movie)')
+      const [results] = await connection.query('SELECT * FROM public.movie WHERE viewer = (SELECT MAX(viewer) FROM public.movie)')
       return results[0]
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-MOST-VIEWED-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+    }
+  }
+
+  async mostVotedMovie() {
+    try {
+      const [result] = await connection.query(`
+        SELECT * FROM public.movie WHERE vote_count=(
+          SELECT MAX(vote_count) FROM public.movie
+        )
+      `)
+      return result[0]
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'GET-MOST-VOTED-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
     }

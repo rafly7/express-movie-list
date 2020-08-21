@@ -53,14 +53,11 @@ export const active  = catchAsync(
     if (req.session.loggedIn) {
       const now = Date.now()
       const { createdAt } = req.session
-
       if (now > createdAt + SESSION_ABSOLUTE_TIMEOUT) {
         await logOut(req, res)
-
         res.status(401).send('Session expired')
       }
     }
-
     next()
   }
 )

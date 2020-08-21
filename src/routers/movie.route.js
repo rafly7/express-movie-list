@@ -1,4 +1,4 @@
-import express from 'express'
+import {Router} from 'express'
 import MovieService from '../services/movie.service'
 import {
   addMovie,
@@ -13,7 +13,7 @@ import Movie from '../models/movie'
 import {cookieValidationAdmin, cookieValidationUser} from '../middlewares/cookie-validation'
 
 const movieService = new MovieService(Movie)
-const router = express.Router();
+const router = Router();
 
 router.get('/view/:id', (req, res, next) => viewMovieById(req, res, movieService))
 router.get('/page/:page', (req, res, next) => getAllMovieWithPagination(req, res, movieService))

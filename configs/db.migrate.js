@@ -4,9 +4,8 @@ import Genre from '../src/models/genre'
 import Artist from '../src/models/artist'
 import Admin from '../src/models/admin'
 import Movie from '../src/models/movie'
-import Viewer from '../src/models/viewer'
 import Bcrypt from 'bcryptjs'
-import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
+import {dbAssociation} from '../src/models/movie_vote_user'
 
 (async _ => {
   dbAssociation()
@@ -97,17 +96,12 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
   /**
    * Migrate for table movie
    */
-  const a = ["1","2","3"]
-  const res = a.toString().split(',').map(Number)
-  // console.log(res)
   let movie1 = await Movie.create({
     title: 'Stay On The Earth',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    // viewer: '10',
     artists: [1,2,3,4],
     genres: [1,3,5]
   })
@@ -115,10 +109,8 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Planet of the apes',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    // viewer: '20',
     artists: [1,2,3,4],
     genres: [1,2,5]
   })
@@ -126,8 +118,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Neptune Wars',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '12',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -137,10 +127,8 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Special Group',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    // viewer: '14',
     artists: [1,2,3,4],
     genres: [2,5,6]
   })
@@ -148,8 +136,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Pluto and venus',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '4',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -159,8 +145,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Crackers',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '16',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -170,8 +154,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Shadow Time',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '24',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -181,8 +163,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Space adventure',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '9',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -192,8 +172,6 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Nightmare',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '11',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
@@ -203,43 +181,10 @@ import {MovieVoteUser, dbAssociation} from '../src/models/movie_vote_user'
     title: 'Demon king',
     description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
     duration: '0',
-    // vote_count: '0',
-    // viewer: '6',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
     artists: [1,2,3,4],
     genres: [1,4,5]
   })
-
-  // const id1 = await findIdMovie(movie1.title)
-  // const id2 = await findIdUser(user1.email)
-  // await Viewer.create({
-  //   movie_id: id1,
-  //   user_id: id2
-  // })
-  // await Viewer.create({
-  //   movie_id: id1,
-  //   user_id: id2
-  // })
   process.exit(0)
 })();
-  
-  const findIdMovie = async (title) =>{
-    const {dataValues: {id}} = await Movie.findOne({
-      where: {
-        title: title
-      }
-    })
-    console.log(id)
-    return id
-  }
-  
-  const findIdUser = async (email) =>{
-    const {dataValues: {id}} = await User.findOne({
-      where: {
-        email: email
-      }
-    })
-    console.log(id)
-    return id
-  }
