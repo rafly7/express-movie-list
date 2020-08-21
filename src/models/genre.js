@@ -11,11 +11,6 @@ const Genre = connection.define('genre', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-  },
-  viewer: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 0
   }
 }, {
   freezeTableName: true,

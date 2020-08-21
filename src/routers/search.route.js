@@ -10,7 +10,7 @@ const movieService = new MovieService(Movie)
 const genreService = new GenreService(Genre)
 const router = express.Router();
 
-router.get('/', cookieValidationUser, (req, res, next) => findWithQuery(req,res, movieService))
+router.get('/', (req, res, next) => findWithQuery(req,res, movieService))
 router.get('/most-viewed-movie',cookieValidationAdmin, (req, res, next) => mostViewedMovie(req, res, movieService))
 router.get('/most-viewed-genre',cookieValidationAdmin, (req, res, next) => mostViewedGenre(req, res, genreService))
 

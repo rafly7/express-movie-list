@@ -5,6 +5,7 @@ import Genre from '../models/genre';
 import Artist from '../models/artist';
 import { MovieVoteUser } from '../models/movie_vote_user';
 import User from '../models/user';
+import Viewer from '../models/viewer';
 
 class MovieService {
   constructor(Movie) {
@@ -75,7 +76,7 @@ class MovieService {
     }
   }
 
-  async getMovieWithPagination(page) {
+  async getAllMovieWithPagination(page) {
     try {
       let limit = 5
       let offset = 0
@@ -99,6 +100,7 @@ class MovieService {
         logTitle: 'GET-PAGINATION-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
@@ -283,6 +285,43 @@ class MovieService {
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'LIST-ALL-VOTED-USER-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
+
+  async viewMovieById(movieId) {
+    try {
+      const result = connection.transaction(async (t) => {
+        await Viewer.create({
+          movie_id: movieId
+        },{transaction: t})
+        const {viewer} = await this.Movie.findOne({
+          attributes: ['viewer'],
+          where: {
+            id: movieId,
+          },
+          raw: true,
+          transaction: t
+        })
+        await this.Movie.update({viewer: viewer+1},{
+          where: {
+            id: movieId
+          },
+          transaction: t
+        })
+        return await this.Movie.findOne({
+          where: {
+            id: movieId
+          },
+          transaction: t
+        })
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'VIEW-MOVIE-BY-ID-SERVICE-FAILED',
         logMessage: e
       })
       throw new Error
