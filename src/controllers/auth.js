@@ -29,4 +29,19 @@ const authAllLogout = async (req, res, next) => {
   await logOut(req, res)
   res.status(200).json({message: 'success logout'})
 }
-export { authAdmin, authUser, authAllLogout}
+
+const registerUser = async (req, res, service) => {
+  try {
+    const data = req.body
+    const registerUser = await service.registerUser(data)
+    res.status(200).json(registerUser)
+  } catch (e) {
+    res.status(400).json({message: 'Register failed'})
+  }
+}
+export {
+  authAdmin,
+  authUser,
+  authAllLogout,
+  registerUser
+}
