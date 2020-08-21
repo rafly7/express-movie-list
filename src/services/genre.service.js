@@ -8,13 +8,21 @@ class GenreService {
 
   async mostViewedGenre() {
     try {
-      const [results] = await connection.query('SELECT * FROM public.genre WHERE viewer = (SELECT  MAX(viewer) FROM public.genre)')
+      const [results] = await connection.query(`
+        select * from genre where id=(
+          select genre_id from (
+            select sum(viewer) as number_viewer,genre as genre_id from movie, unnest(genres) as genre
+            group by genre_id order by number_viewer desc limit 1
+          ) as result
+        );
+      `)
       return results[0]
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-MOST-VIEWED-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 }
