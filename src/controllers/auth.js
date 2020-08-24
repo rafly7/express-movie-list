@@ -8,7 +8,7 @@ const authAdmin = async (req, res, service) => {
     res.status(200)
     res.json({message: 'Success authenticate as admin'})
   } catch (e) {
-    res.status(400).json({message: 'Incorrect Username or password'})
+    res.status(400).json({message: 'Incorrect email or password'})
   }
 }
 
@@ -20,8 +20,7 @@ const authUser = async (req, res, service) => {
     res.status(200)
     res.json({message: 'Success authenticate as user'})
   } catch (e) {
-    console.log(e)
-    res.status(400).json({message: 'Incorrect Username or password'})
+    res.status(400).json({message: 'Incorrect email or password'})
   }
 }
 

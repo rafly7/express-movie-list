@@ -6,6 +6,7 @@ import connectRedis from 'connect-redis'
 import Redis from 'ioredis'
 import { SESSION_OPTION } from '../../configs/session'
 import REDIS_OPTION from '../../configs/cache.connect'
+import cors from 'cors'
 
 config()
 const RedisStore = connectRedis(session)
@@ -24,6 +25,7 @@ router.use(session({
   store: store
 }))
 router.use(active)
+router.use(cors())
 
 router.use((req, res, next) => {
   next()

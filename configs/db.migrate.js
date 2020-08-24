@@ -5,6 +5,7 @@ import Artist from '../src/models/artist'
 import Admin from '../src/models/admin'
 import Movie from '../src/models/movie'
 import Bcrypt from 'bcryptjs'
+import Viewer from '../src/models/viewer'
 import {dbAssociation} from '../src/models/movie_vote_user'
 
 (async _ => {
@@ -102,7 +103,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [1,2],
     genres: [1,3,5]
   })
   let movie2 = await Movie.create({
@@ -111,7 +112,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [3,4],
     genres: [1,2,5]
   })
   let movie3 = await Movie.create({
@@ -120,7 +121,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [1,4],
     genres: [1,2,3]
   })
   let movie4 = await Movie.create({
@@ -129,7 +130,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [1,3],
     genres: [2,5,6]
   })
   let movie5 = await Movie.create({
@@ -138,7 +139,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [2,3,4,5],
     genres: [1,2,6]
   })
   let movie6 = await Movie.create({
@@ -147,7 +148,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [2,4,6],
     genres: [3,4,5]
   })
   let movie7 = await Movie.create({
@@ -156,7 +157,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [1,3,6],
     genres: [2,4,6]
   })
   let movie8 = await Movie.create({
@@ -165,7 +166,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [1,4,5],
     genres: [4,5,6]
   })
   let movie9 = await Movie.create({
@@ -174,7 +175,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [2,3,5],
     genres: [3,4,6]
   })
   let movie10 = await Movie.create({
@@ -183,7 +184,7 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     duration: '0',
     watch_url: 'https://example.com',
     file_name: 'efeufwf',
-    artists: [1,2,3,4],
+    artists: [4,5,6],
     genres: [1,4,5]
   })
   process.exit(0)

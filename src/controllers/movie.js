@@ -1,5 +1,6 @@
 import multer from 'multer'
 import {deleteFolderRecursive, uploadFile, updateFileFirebase} from '../../configs/firestore'
+import path from 'path'
 
 let fileName;
 
@@ -13,7 +14,16 @@ const multerStorage = multer.diskStorage({
   }
 })
 
-const movieUpload = multer({storage:multerStorage}).single('movie') 
+const movieUpload = multer({
+  storage:multerStorage,
+  fileFilter: function (req, file, callback) {
+    const ext = path.extname(file.originalname)
+    if(ext !== '.mp4' || ext !== '.mkv' || ext !== '.webm') {
+      return callback(null, true)
+    }
+    return callback(new Error())
+  }
+}).single('movie') 
 
 const addMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
@@ -25,10 +35,8 @@ const addMovie = async (req, res, service) => {
       try {
         const resultUpload = await uploadFile(`./uploads/${fileName}`, req.file);
         const addMovie = await service.addMovie(resultUpload, movie)
-        res.status(200)
-        res.json(addMovie)
+        res.status(200).json(addMovie)
       } catch (e) {
-        console.log(e)
         res.status(500)
         res.json({message: 'Something went wrong'})
       } finally {
