@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
 
 const Artist = connection.define('artist', {
   id: {
@@ -18,4 +18,4 @@ const Artist = connection.define('artist', {
   paranoid: true
 })
 
-export default Artist;
+module.exports = Artist;

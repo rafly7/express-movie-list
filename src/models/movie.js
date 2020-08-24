@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
 
 const Movie = connection.define('movie', {
   id: {
@@ -52,4 +52,4 @@ const Movie = connection.define('movie', {
   paranoid: true
 })
 
-export default Movie
+module.exports = Movie

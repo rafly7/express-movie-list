@@ -49,7 +49,8 @@ const findWithQuery = async (req, res, service) => {
     res.status(400).send('Something went wrong')
   }
 }
-export {
+
+module.exports = {
   mostViewedGenre,
   mostViewedMovie,
   findWithQuery,

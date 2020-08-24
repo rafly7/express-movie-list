@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
 
 const Genre = connection.define('genre', {
   id: {
@@ -18,4 +18,4 @@ const Genre = connection.define('genre', {
   paranoid: true
 })
 
-export default Genre;
+module.exports = Genre

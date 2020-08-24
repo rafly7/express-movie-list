@@ -1,5 +1,5 @@
-import { createLogger } from "bunyan";
-import { config } from "dotenv";
+const {createLogger} = require('bunyan')
+const {config} =  require('dotenv')
 
 config();
 
@@ -36,4 +36,4 @@ const recordLog = (logInfo) => {
   }
 };
 
-export default recordLog;
+module.exports = recordLog

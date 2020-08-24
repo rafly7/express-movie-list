@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
 
 const Admin = connection.define('admin', {
   id: {
@@ -33,4 +33,4 @@ const Admin = connection.define('admin', {
   paranoid: true
 })
 
-export default Admin;
+module.exports = Admin

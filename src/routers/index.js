@@ -1,9 +1,9 @@
-import {Router} from 'express'
-import movieRoutes from '../routers/movie.route';
-import authRoutes from '../routers/auth.route'
-import searchRoutes from '../routers/search.route'
-import logRoute from './log.route';
-import noRoute from './no.route';
+const Router = require('express')
+const movieRoutes = require('./movie.route')
+const authRoutes = require('./auth.route')
+const searchRoutes = require('./search.route')
+const logRoute = require('./log.route')
+const noRoute = require('./no.route')
 
 const router = Router();
 
@@ -13,4 +13,4 @@ router.use('/auth', authRoutes)
 router.use('/search', searchRoutes)
 router.use(noRoute)
 
-export default router;
+module.exports = router

@@ -1,4 +1,4 @@
-import {config} from 'dotenv'
+const {config} = require('dotenv')
 
 config()
 
@@ -8,21 +8,21 @@ const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_H
 const catchAsync = handler =>
   (...args) => handler(...args).catch(args[2])
 
-export const logInAdmin = (req, id) => {
+const logInAdmin = (req, id) => {
   req.session.adminId = id
   req.session.loggedIn = true
   req.session.role = 1
   req.session.createdAt = Date.now()
 }
 
-export const logInUser = (req, id) => {
+const logInUser = (req, id) => {
   req.session.userId = id
   req.session.loggedIn = true
   req.session.role = 2
   req.session.createdAt = Date.now()
 }
 
-export const logOut = (req, res) =>
+const logOut = (req, res) =>
   new Promise((resolve, reject) => {
     req.session.destroy(err => {
     if (err) reject(err)
@@ -32,7 +32,7 @@ export const logOut = (req, res) =>
 })
 
 
-export const restrict = (req, res, next) => {
+const restrict = (req, res, next) => {
   if(req.session.loggedIn) {
     res.status(400).json({message: 'You have already logged in'})
   } else {
@@ -40,7 +40,7 @@ export const restrict = (req, res, next) => {
   }
 }
 
-export const auth = (req, res, next) => {
+const auth = (req, res, next) => {
   if(req.session.loggedIn) {
     next()
   } else {
@@ -48,7 +48,7 @@ export const auth = (req, res, next) => {
   }
 }
 
-export const active  = catchAsync(
+const active  = catchAsync(
   async (req, res, next) => {
     if (req.session.loggedIn) {
       const now = Date.now()
@@ -61,3 +61,12 @@ export const active  = catchAsync(
     next()
   }
 )
+
+module.exports = {
+  active,
+  auth,
+  restrict,
+  logOut,
+  logInUser,
+  logInAdmin
+}

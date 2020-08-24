@@ -1,10 +1,10 @@
-import logEvent from '../events/myEmitter'
-import connection from '../../configs/db.connect';
-import Sequelize from 'sequelize';
-import Genre from '../models/genre';
-import Artist from '../models/artist';
-import { MovieVoteUser } from '../models/movie_vote_user';
-import Viewer from '../models/viewer';
+const logEvent = require('../events/myEmitter')
+const connection = require('../../configs/db.connect')
+const Sequelize = require('sequelize')
+const Genre = require('../models/genre')
+const Artist = require('../models/artist')
+const {MovieVoteUser} = require('../models/movie_vote_user')
+const Viewer = require('../models/viewer')
 
 class MovieService {
   constructor(Movie) {
@@ -352,4 +352,4 @@ const convertArrayString = data => {
   return data.toString().split(',').map(Number)
 }
 
-export default MovieService
+module.exports = MovieService

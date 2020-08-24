@@ -1,9 +1,9 @@
-import {createServer} from 'http'
-import express from 'express'
-import logEvent from './events/myEmitter'
-import appMiddleware from './middlewares/app-middleware'
-import appRoutes from './routers'
-import { dbAssociation } from './models/movie_vote_user'
+const {createServer} = require('http')
+const express = require('express')
+const logEvent = require('./events/myEmitter')
+const appMiddleware = require('./middlewares/app-middleware')
+const appRoutes = require('./routers')
+const {dbAssociation} = require('./models/movie_vote_user')
 
 const app = express();
 dbAssociation()
@@ -20,4 +20,4 @@ server.on('error', function (e) {
   })
 })
 
-export default server;
+module.exports = server;

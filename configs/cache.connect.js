@@ -1,4 +1,4 @@
-import {config} from 'dotenv'
+const {config} = require('dotenv')
 config()
 
 const REDIS_OPTION = {
@@ -6,4 +6,4 @@ const REDIS_OPTION = {
   host: process.env.REDIS_HOST,
 }
 
-export default REDIS_OPTION;
+module.exports = REDIS_OPTION

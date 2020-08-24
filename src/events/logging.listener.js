@@ -1,5 +1,6 @@
-import recordLog from '../../configs/logger'
-import logEvent from './myEmitter'
+
+const recordLog = require('../../configs/logger')
+const logEvent = require('./myEmitter')
 
 const loggingListener = _ => {
   logEvent.on('APP-ERROR', function (event) {
@@ -13,4 +14,4 @@ const loggingListener = _ => {
   })
 }
 
-export default loggingListener;
+module.exports = loggingListener

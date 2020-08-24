@@ -1,6 +1,6 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
-import Movie from './movie'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
+const Movie = require('./movie')
 
 const Viewer = connection.define('viewer', {
   id: {
@@ -28,4 +28,4 @@ const Viewer = connection.define('viewer', {
   timestamps: false
 })
 
-export default Viewer
+module.exports = Viewer

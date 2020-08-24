@@ -1,8 +1,8 @@
-import {config} from 'dotenv'
+const {config} = require('dotenv')
 
 config()
 
-export const SESSION_OPTION = {
+const SESSION_OPTION = {
   secret: process.env.SESSION_SECRET,
   name: process.env.SESSION_NAME,
   cookie: {
@@ -14,3 +14,4 @@ export const SESSION_OPTION = {
   rolling: true,
   saveUninitialized: false
 }
+module.exports = {SESSION_OPTION}

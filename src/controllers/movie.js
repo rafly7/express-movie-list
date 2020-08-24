@@ -1,6 +1,6 @@
-import multer from 'multer'
-import {deleteFolderRecursive, uploadFile, updateFileFirebase} from '../../configs/firestore'
-import path from 'path'
+const path = require('path')
+const multer = require('multer')
+const {deleteFolderRecursive, uploadFile, updateFileFirebase} = require('../../configs/firestore')
 
 let fileName;
 
@@ -126,7 +126,7 @@ const viewMovieById = async (req, res, service) => {
   }
 }
 
-export {
+module.exports = {
   addMovie,
   updateMovie,
   getAllMovieWithPagination,

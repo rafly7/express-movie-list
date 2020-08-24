@@ -1,6 +1,6 @@
-import {Router} from 'express'
-import MovieService from '../services/movie.service'
-import {
+const {Router} = require('express')
+const MovieService = require('../services/movie.service')
+const {
   addMovie,
   updateMovie,
   getAllMovieWithPagination,
@@ -8,9 +8,9 @@ import {
   unvoteMovie,
   listAllUserVote,
   viewMovieById
-} from '../controllers/movie'
-import Movie from '../models/movie'
-import {cookieValidationAdmin, cookieValidationUser} from '../middlewares/cookie-validation'
+} = require('../controllers/movie')
+const Movie = require('../models/movie')
+const {cookieValidationAdmin, cookieValidationUser} = require('../middlewares/cookie-validation')
 
 const movieService = new MovieService(Movie)
 const router = Router();
@@ -25,4 +25,4 @@ router.post('/vote/:id', cookieValidationUser, (req, res, next) => voteMovie(req
 router.put('/',cookieValidationAdmin, (req, res, next) => updateMovie(req, res, movieService))
 router.post('/',cookieValidationAdmin, (req, res, next) => addMovie(req, res, movieService))
 
-export default router;
+module.exports = router;

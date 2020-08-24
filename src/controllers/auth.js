@@ -1,4 +1,4 @@
-import {logInAdmin, logOut, logInUser } from '../middlewares/auth'
+const {logInAdmin, logOut, logInUser} = require('../middlewares/auth')
 
 const authAdmin = async (req, res, service) => {
   try {
@@ -38,7 +38,8 @@ const registerUser = async (req, res, service) => {
     res.status(400).json({message: 'Register failed'})
   }
 }
-export {
+
+module.exports = {
   authAdmin,
   authUser,
   authAllLogout,

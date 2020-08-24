@@ -1,10 +1,15 @@
-import {Router} from 'express'
-import MovieService from '../services/movie.service'
-import GenreService from '../services/genre.service'
-import {mostViewedGenre,mostViewedMovie, findWithQuery, mostVotedMovie} from '../controllers/search'
-import Movie from '../models/movie'
-import Genre from '../models/genre'
-import {cookieValidationAdmin} from '../middlewares/cookie-validation'
+const {Router} = require('express')
+const MovieService = require('../services/movie.service')
+const GenreService = require('../services/genre.service')
+const {
+  mostViewedGenre,
+  mostViewedMovie,
+  findWithQuery,
+  mostVotedMovie
+} = require('../controllers/search')
+const Movie = require('../models/movie')
+const Genre = require('../models/genre')
+const {cookieValidationAdmin} = require('../middlewares/cookie-validation')
 
 const movieService = new MovieService(Movie)
 const genreService = new GenreService(Genre)
@@ -15,4 +20,4 @@ router.get('/most-voted-movie',cookieValidationAdmin, (req, res, next) => mostVo
 router.get('/most-viewed-movie',cookieValidationAdmin, (req, res, next) => mostViewedMovie(req, res, movieService))
 router.get('/most-viewed-genre',cookieValidationAdmin, (req, res, next) => mostViewedGenre(req, res, genreService))
 
-export default router;
+module.exports = router;

@@ -1,10 +1,10 @@
-import {Router} from 'express'
-import { authAdmin, authAllLogout, authUser, registerUser } from '../controllers/auth';
-import { restrict, auth } from '../middlewares/auth';
-import Admin from '../models/admin'
-import User from '../models/user'
-import AuthService from '../services/auth.service';
-import cookieParser from 'cookie-parser';
+const {Router} = require('express')
+const {authAdmin, authAllLogout, authUser, registerUser} = require('../controllers/auth')
+const {restrict, auth} = require('../middlewares/auth')
+const Admin = require('../models/admin')
+const User = require('../models/user')
+const AuthService = require('../services/auth.service')
+const cookieParser = require('cookie-parser')
 
 const authAdminService = new AuthService(Admin)
 const authUserService = new AuthService(User)
@@ -15,4 +15,5 @@ router.post('/register-user', (req, res, next) => registerUser(req, res, authUse
 router.post('/admin', restrict, (req, res, next) => authAdmin(req, res, authAdminService))
 router.post('/user', restrict, (req, res, next) => authUser(req, res, authUserService))
 router.post('/logout',auth, (req, res, next) => authAllLogout(req, res, next))
-export default router;
+
+module.exports = router

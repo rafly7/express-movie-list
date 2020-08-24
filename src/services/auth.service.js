@@ -1,5 +1,5 @@
-import logEvent from '../events/myEmitter'
-import Bcrypt from 'bcryptjs'
+const logEvent = require('../events/myEmitter')
+const Bcrypt = require('bcryptjs')
 
 class AuthService {
   constructor(Auth) {
@@ -64,4 +64,4 @@ class AuthService {
   }
 }
 
-export default AuthService
+module.exports = AuthService

@@ -14,4 +14,7 @@ const cookieValidationUser = (req, res, next) => {
   }
 }
 
-export {cookieValidationAdmin, cookieValidationUser}
+module.exports = {
+  cookieValidationAdmin,
+  cookieValidationUser
+}

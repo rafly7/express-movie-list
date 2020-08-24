@@ -1,7 +1,8 @@
-import path from 'path'
-import fs from 'fs'
-import {Storage} from '@google-cloud/storage'
-import {v4, v1} from 'uuid'
+const path = require('path')
+const fs = require('fs')
+const {Storage} = require('@google-cloud/storage')
+const {v4, v1} = require('uuid')
+
 const gstorage = new Storage({
   projectId: "express-movielist",
   keyFilename: 'configs/express-movielist.json'
@@ -51,4 +52,8 @@ const updateFileFirebase = (oldFileName, newFileName, infoFile) => {
     .catch(e => e)
 }
 
-export {deleteFolderRecursive, uploadFile, updateFileFirebase}
+module.exports = {
+  deleteFolderRecursive,
+  uploadFile,
+  updateFileFirebase
+}

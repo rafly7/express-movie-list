@@ -1,5 +1,5 @@
-import logEvent from '../events/myEmitter'
-import connection from '../../configs/db.connect';
+const logEvent = require('../events/myEmitter')
+const connection = require('../../configs/db.connect')
 
 class GenreService {
   constructor(genre) {
@@ -27,4 +27,4 @@ class GenreService {
   }
 }
 
-export default GenreService
+module.exports = GenreService

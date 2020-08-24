@@ -1,4 +1,5 @@
-import logEvent from '../events/myEmitter'
+const logEvent = require('../events/myEmitter')
+
 const logRoute = (req, res,next) => {
     logEvent.emit('APP-INFO', {
         logTitle: 'ROUTE-TRACK',
@@ -6,4 +7,4 @@ const logRoute = (req, res,next) => {
     });
     next();
 };
-export default logRoute
+module.exports = logRoute

@@ -1,5 +1,5 @@
-import Sequelize from 'sequelize'
-import connection from '../../configs/db.connect'
+const Sequelize = require('sequelize')
+const connection = require('../../configs/db.connect')
 
 const User = connection.define('user', {
   id: {
@@ -29,4 +29,4 @@ const User = connection.define('user', {
   paranoid: true
 })
 
-export default User
+module.exports = User

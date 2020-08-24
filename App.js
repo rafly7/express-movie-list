@@ -1,8 +1,8 @@
-import {config} from 'dotenv'
-import server from './src'
-import connection from './configs/db.connect'
-import logEvent from './src/events/myEmitter'
-import loggingListener from './src/events/logging.listener'
+const {config} = require('dotenv')
+const server = require('./src')
+const connection = require('./configs/db.connect')
+const logEvent = require('./src/events/myEmitter')
+const loggingListener = require('./src/events/logging.listener')
 
 config();
 

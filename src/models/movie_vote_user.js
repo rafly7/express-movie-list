@@ -1,6 +1,6 @@
-import Movie from './movie'
-import User from './user'
-import connection from '../../configs/db.connect'
+const connection = require('../../configs/db.connect')
+const Movie = require('./movie')
+const User = require('./user')
 
 const MovieVoteUser = connection.define('movie_vote_user',{
 },{
@@ -13,4 +13,5 @@ const dbAssociation = () => {
   Movie.belongsToMany(User, {through: MovieVoteUser, foreignKey: 'movie_id', as: 'movies'})
   User.belongsToMany(Movie, {through: MovieVoteUser, foreignKey: 'user_id'})
 }
-export {MovieVoteUser , dbAssociation};
+
+module.exports = {MovieVoteUser, dbAssociation}
