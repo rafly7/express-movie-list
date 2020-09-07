@@ -1,25 +1,33 @@
 const logEvent = require('../events/myEmitter')
-const connection = require('../../configs/db.connect')
 const Sequelize = require('sequelize')
-const Genre = require('../models/genre')
-const Artist = require('../models/artist')
-const {MovieVoteUser} = require('../models/movie_vote_user')
-const Viewer = require('../models/viewer')
 
 class MovieService {
-  constructor(Movie) {
-    this.Movie = Movie;
+  constructor({
+    movie: movie,
+    artist: artist,
+    genre: genre,
+    movie_vote_user: movie_vote_user,
+    viewer: viewer,
+    connection: connection
+  }) {
+    this.movie = movie
+    this.artist = artist
+    this.genre = genre
+    this.viewer = viewer
+    this.movie_vote_user = movie_vote_user
+    this.connection = connection
   }
 
-  async addMovie(resultUpload, body) {
+  async addMovie(resultUpload, duration, body) {
     let result;
     try {
       const {result_url, uuid} = resultUpload
       body.watch_url = result_url
       body.file_name = uuid
+      body.duration = duration
       body.artists = convertArrayString(body.artists)
       body.genres = convertArrayString(body.genres)
-      result = await this.Movie.create(body)
+      result = await this.movie.create(body)
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'CREATE-MOVIE-SERVICE-FAILED',
@@ -33,7 +41,7 @@ class MovieService {
   async updateMovie(body) {
     let result;
     try {
-      result = await this.Movie.findByPk(body.id)
+      result = await this.movie.findByPk(body.id)
       result.title = body.title === undefined ? result.title : body.title
       result.description = body.description === undefined ? result.description : body.description
       result.duration = body.duration === undefined ? result.duration : body.duration
@@ -55,33 +63,36 @@ class MovieService {
   async getOldFileName(body) {
     let result;
     try {
-      result = await this.Movie.findByPk(body.id)
+      result = await this.movie.findByPk(body.id)
       result = result.dataValues.file_name
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-OLD-FILENAME-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
     return result
   }
+
   async mostViewedMovie() {
     try {
-      const [results] = await connection.query('SELECT * FROM public.movie WHERE viewer = (SELECT MAX(viewer) FROM public.movie)')
+      const [results] = await this.connection.query('SELECT * FROM movie WHERE viewer = (SELECT MAX(viewer) FROM movie)')
       return results[0]
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-MOST-VIEWED-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
   async mostVotedMovie() {
     try {
-      const [result] = await connection.query(`
-        SELECT * FROM public.movie WHERE vote_count=(
-          SELECT MAX(vote_count) FROM public.movie
+      const [result] = await this.connection.query(`
+        SELECT * FROM movie WHERE vote_count=(
+          SELECT MAX(vote_count) FROM movie
         )
       `)
       return result[0]
@@ -90,6 +101,7 @@ class MovieService {
         logTitle: 'GET-MOST-VOTED-MOVIE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
@@ -97,14 +109,14 @@ class MovieService {
     try {
       let limit = 5
       let offset = 0
-      let result = await this.Movie.findAndCountAll()
+      let result = await this.movie.findAndCountAll()
         .then((data) => {
           let pages = Math.ceil(data.count / limit)
           offset = limit * (page - 1)
           return Promise.resolve({dataCount: data.count,pages: pages ,newOffset: offset})
         })
       const {dataCount, pages, newOffset} = result
-      result = await this.Movie.findAll({
+      result = await this.movie.findAll({
         limit: limit,
         offset: newOffset
       }).then(movies => {
@@ -123,7 +135,7 @@ class MovieService {
 
   async findMovieWithTitle(title) {
     try {
-      const result = await this.Movie.findAll({
+      const result = await this.movie.findAll({
         where: {
           title: {
             [Sequelize.Op.iLike]: `%${title}%`
@@ -136,12 +148,13 @@ class MovieService {
         logTitle: 'FIND-MOVIE-WITH-TITLE-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
   async findMovieWithDescription(description) {
     try {
-      const result = await this.Movie.findAll({
+      const result = await this.movie.findAll({
         where: {
           description: {
             [Sequelize.Op.iLike]: `%${description}%`
@@ -154,19 +167,20 @@ class MovieService {
         logTitle: 'FIND-MOVIE-WITH-DESCRIPTION-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
   async findMovieWithArtists(artist) {
     try {
-      const {dataValues: {id}} = await Artist.findOne({
+      const {dataValues: {id}} = await this.artist.findOne({
         where: {
           name: {
             [Sequelize.Op.iLike]: artist
           }
         }
       })
-      const result = await this.Movie.findAll({
+      const result = await this.movie.findAll({
         where: {
           artists: {
             [Sequelize.Op.contains]: [id]
@@ -179,19 +193,20 @@ class MovieService {
         logTitle: 'FIND-MOVIE-WITH-ARTISTS-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
   async findMovieWithGenres(genre) {
     try {
-      const {dataValues: {id}} = await Genre.findOne({
+      const {dataValues: {id}} = await this.genre.findOne({
         where: {
           name: {
             [Sequelize.Op.iLike]: genre
           }
         }
       })
-      const result = await this.Movie.findAll({
+      const result = await this.movie.findAll({
         where: {
           genres: {
             [Sequelize.Op.contains]: [id]
@@ -204,17 +219,18 @@ class MovieService {
         logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',
         logMessage: e
       })
+      throw new Error
     }
   }
 
   async voteMovie(movie_id, user_id) {
     try {
-      const result = await MovieVoteUser.create({
+      const result = await this.movie_vote_user.create({
         movie_id: movie_id,
         user_id: user_id
       })
       if(result) {
-        const updateMovie = await this.Movie.findByPk(movie_id)
+        const updateMovie = await this.movie.findByPk(movie_id)
         updateMovie.vote_count = updateMovie.vote_count+1
         updateMovie.save()
         return updateMovie
@@ -230,8 +246,8 @@ class MovieService {
 
   async unvoteMovie(movieId, userId) {
     try {
-      const result = connection.transaction(async (t) => {
-        const {dataValues: {movie_id}} = await MovieVoteUser.findOne({
+      const result = this.connection.transaction(async (t) => {
+        const {movie_id} = await this.movie_vote_user.findOne({
           attributes: ['movie_id'],
           where: {
             [Sequelize.Op.and]: [
@@ -239,21 +255,23 @@ class MovieService {
               {user_id: userId}
             ]
           },
+          raw: true,
           transaction: t
         })
-        const {dataValues: {vote_count}} = await this.Movie.findOne({
+        const {vote_count} = await this.movie.findOne({
+          where: {
+            id: movie_id
+          },
+          raw: true,
+          transaction: t
+        })
+        await this.movie.update({vote_count: vote_count-1},{
           where: {
             id: movie_id
           },
           transaction: t
         })
-        await this.Movie.update({vote_count: vote_count-1},{
-          where: {
-            id: movie_id
-          },
-          transaction: t
-        })
-        await MovieVoteUser.destroy({
+        await this.movie_vote_user.destroy({
           where: {
             [Sequelize.Op.and]: [
               {movie_id: movieId},
@@ -262,7 +280,7 @@ class MovieService {
           },
           transaction: t
         })
-        return await this.Movie.findOne({
+        return await this.movie.findOne({
           where: {
             id: movie_id
           },
@@ -281,19 +299,17 @@ class MovieService {
 
   async listAllUserVote(userId) {
     try {
-      let result = await MovieVoteUser.findAll({
+      let result = await this.movie_vote_user.findOne({
         attributes: ['movie_id'],
         where: {
           user_id: userId
         },
         raw: true
-      }).then(data => {
-        return data.map(movie => movie.movie_id)
       })
-      result = await this.Movie.findAll({
+      result = await this.movie.findAll({
         where: {
           id: {
-            [Sequelize.Op.in]: result
+            [Sequelize.Op.in]: [result.movie_id]
           }
         },
         raw: true
@@ -310,11 +326,11 @@ class MovieService {
 
   async viewMovieById(movieId) {
     try {
-      const result = connection.transaction(async (t) => {
-        await Viewer.create({
+      const result = this.connection.transaction(async (t) => {
+        await this.viewer.create({
           movie_id: movieId
         },{transaction: t})
-        const {viewer} = await this.Movie.findOne({
+        const {viewer} = await this.movie.findOne({
           attributes: ['viewer'],
           where: {
             id: movieId,
@@ -322,13 +338,13 @@ class MovieService {
           raw: true,
           transaction: t
         })
-        await this.Movie.update({viewer: viewer+1},{
+        await this.movie.update({viewer: viewer+1},{
           where: {
             id: movieId
           },
           transaction: t
         })
-        return await this.Movie.findOne({
+        return await this.movie.findOne({
           where: {
             id: movieId
           },

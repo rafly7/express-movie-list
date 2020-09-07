@@ -13,7 +13,7 @@ const logConfig = createLogger({
     {
       type: "rotating-file",
       level: process.env.LOG_LEVEL,
-      period: "3d",
+      period: process.env.NODE_ENV === 'test' ? "10ms" : "3d",
       count: 3,
       path: `./log/${process.env.LOG_PATH}`,
     },

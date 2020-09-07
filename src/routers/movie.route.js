@@ -10,9 +10,21 @@ const {
   viewMovieById
 } = require('../controllers/movie')
 const Movie = require('../models/movie')
+const Artist = require('../models/artist')
+const Genre = require('../models/genre')
+const Viewer = require('../models/viewer')
+const connection = require('../../configs/db.connect')
+const {MovieVoteUser} = require('../models/movie_vote_user')
 const {cookieValidationAdmin, cookieValidationUser} = require('../middlewares/cookie-validation')
 
-const movieService = new MovieService(Movie)
+const movieService = new MovieService({
+  movie: Movie,
+  artist: Artist,
+  genre: Genre,
+  viewer: Viewer,
+  movie_vote_user: MovieVoteUser,
+  connection: connection
+})
 const router = Router();
 
 router.get('/view/:id', (req, res, next) => viewMovieById(req, res, movieService))

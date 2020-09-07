@@ -17,7 +17,7 @@ const Movie = connection.define('movie', {
     allowNull: false,
   },
   duration: {
-    type: Sequelize.STRING,
+    type: Sequelize.DOUBLE,
     allowNull: false,
   },
   vote_count: {

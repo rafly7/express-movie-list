@@ -30,7 +30,8 @@ const findWithQuery = async (req, res, service) => {
     if(req.query.title) {
       const title = req.query.title
       const movieWithTitle = await service.findMovieWithTitle(title)
-      res.status(200).json(movieWithTitle)
+      res.status(200)
+      res.json(movieWithTitle)
     } else if(req.query.description) {
       const description = req.query.description
       const movieWithDescription = await service.findMovieWithDescription(description)
@@ -43,8 +44,9 @@ const findWithQuery = async (req, res, service) => {
       const genre = req.query.genres
       const movieWithGenres = await service.findMovieWithGenres(genre)
       res.status(200).json(movieWithGenres)
+    } else {
+      res.status(400).send('Wrong query')
     }
-    res.status(400).send('Something went wrong')
   } catch (e) {
     res.status(400).send('Something went wrong')
   }

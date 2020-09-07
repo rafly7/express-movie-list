@@ -1,5 +1,5 @@
 const {config} = require('dotenv')
-const server = require('./src')
+const server = require('./src/server')
 const connection = require('./configs/db.connect')
 const logEvent = require('./src/events/myEmitter')
 const loggingListener = require('./src/events/logging.listener')

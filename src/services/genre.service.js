@@ -1,14 +1,13 @@
 const logEvent = require('../events/myEmitter')
-const connection = require('../../configs/db.connect')
 
 class GenreService {
-  constructor(genre) {
-    this.genre = genre;
+  constructor(connection) {
+    this.connection = connection;
   }
 
   async mostViewedGenre() {
     try {
-      const [results] = await connection.query(`
+      const [results] = await this.connection.query(`
         select * from genre where id=(
           select genre_id from (
             select sum(viewer) as number_viewer,genre as genre_id from movie, unnest(genres) as genre

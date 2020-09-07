@@ -1,15 +1,13 @@
-import Connection from './db.connect'
-import User from '../src/models/user'
-import Genre from '../src/models/genre'
-import Artist from '../src/models/artist'
-import Admin from '../src/models/admin'
-import Movie from '../src/models/movie'
-import Bcrypt from 'bcryptjs'
-import Viewer from '../src/models/viewer'
-import {dbAssociation} from '../src/models/movie_vote_user'
+const Connection = require('./db.connect')
+const User = require('../src/models/user')
+const Genre = require('../src/models/genre')
+const Artist = require('../src/models/artist')
+const Admin = require('../src/models/admin')
+const Bcrypt = require('bcryptjs')
+const {dbAssociation} = require('../src/models/movie_vote_user')
 
-(async _ => {
-  dbAssociation()
+const run = async function() {
+  dbAssociation();
   await Connection.sync({force: true})
   let salt = await Bcrypt.genSalt(10)
   let password1 = await Bcrypt.hash('123456', salt)
@@ -93,99 +91,6 @@ import {dbAssociation} from '../src/models/movie_vote_user'
     phoneNumber: '634445542323',
     password: passwordAdmin3
   })
-
-  /**
-   * Migrate for table movie
-   */
-  let movie1 = await Movie.create({
-    title: 'Stay On The Earth',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [1,2],
-    genres: [1,3,5]
-  })
-  let movie2 = await Movie.create({
-    title: 'Planet of the apes',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [3,4],
-    genres: [1,2,5]
-  })
-  let movie3 = await Movie.create({
-    title: 'Neptune Wars',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [1,4],
-    genres: [1,2,3]
-  })
-  let movie4 = await Movie.create({
-    title: 'Special Group',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [1,3],
-    genres: [2,5,6]
-  })
-  let movie5 = await Movie.create({
-    title: 'Pluto and venus',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [2,3,4,5],
-    genres: [1,2,6]
-  })
-  let movie6 = await Movie.create({
-    title: 'Crackers',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [2,4,6],
-    genres: [3,4,5]
-  })
-  let movie7 = await Movie.create({
-    title: 'Shadow Time',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [1,3,6],
-    genres: [2,4,6]
-  })
-  let movie8 = await Movie.create({
-    title: 'Space adventure',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [1,4,5],
-    genres: [4,5,6]
-  })
-  let movie9 = await Movie.create({
-    title: 'Nightmare',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [2,3,5],
-    genres: [3,4,6]
-  })
-  let movie10 = await Movie.create({
-    title: 'Demon king',
-    description: 'An ex-soldier, a teen and a cop collide in New Orleans as they hunt for the source behind a dangerous new pill that grants users temporary superpowers.',
-    duration: '0',
-    watch_url: 'https://example.com',
-    file_name: 'efeufwf',
-    artists: [4,5,6],
-    genres: [1,4,5]
-  })
   process.exit(0)
-})();
+};
+run()

@@ -9,9 +9,6 @@ const app = express();
 dbAssociation()
 app.use(appMiddleware)
 app.use(appRoutes)
-app.get('/', (req, res) => {
-  res.send('Hello world')
-})
 const server = createServer(app)
 server.on('error', function (e) {
   logEvent.emit('APP-ERROR', {

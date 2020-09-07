@@ -14,4 +14,7 @@ const dbAssociation = () => {
   User.belongsToMany(Movie, {through: MovieVoteUser, foreignKey: 'user_id'})
 }
 
-module.exports = {MovieVoteUser, dbAssociation}
+module.exports = {
+  MovieVoteUser,
+  dbAssociation
+}

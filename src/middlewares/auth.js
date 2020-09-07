@@ -5,9 +5,6 @@ config()
 const SIX_HOURS = 1000 * 60 * 60 * 6
 const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS)
 
-const catchAsync = handler =>
-  (...args) => handler(...args).catch(args[2])
-
 const logInAdmin = (req, id) => {
   req.session.adminId = id
   req.session.loggedIn = true
@@ -25,7 +22,10 @@ const logInUser = (req, id) => {
 const logOut = (req, res) =>
   new Promise((resolve, reject) => {
     req.session.destroy(err => {
-    if (err) reject(err)
+    if (err) {
+      reject(err)
+      res.status(500).send('Something went wrong')
+    }
     res.clearCookie(process.env.SESSION_NAME)
     resolve()
   })
@@ -48,19 +48,17 @@ const auth = (req, res, next) => {
   }
 }
 
-const active  = catchAsync(
-  async (req, res, next) => {
-    if (req.session.loggedIn) {
-      const now = Date.now()
-      const { createdAt } = req.session
-      if (now > createdAt + SESSION_ABSOLUTE_TIMEOUT) {
-        await logOut(req, res)
-        res.status(401).send('Session expired')
-      }
+const active = async (req, res, next) => {
+  if (req.session.loggedIn) {
+    const now = Date.now()
+    const { createdAt } = req.session
+    if (now > createdAt + SESSION_ABSOLUTE_TIMEOUT) {
+      await logOut(req, res)
+      res.status(401).send('Session expired')
     }
-    next()
   }
-)
+  next()
+}
 
 module.exports = {
   active,

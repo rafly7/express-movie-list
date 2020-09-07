@@ -7,12 +7,19 @@ const {
   findWithQuery,
   mostVotedMovie
 } = require('../controllers/search')
-const Movie = require('../models/movie')
 const Genre = require('../models/genre')
 const {cookieValidationAdmin} = require('../middlewares/cookie-validation')
+const connection = require('../../configs/db.connect')
+const Movie = require('../models/movie')
+const Artist = require('../models/artist')
 
-const movieService = new MovieService(Movie)
-const genreService = new GenreService(Genre)
+const movieService = new MovieService({
+  connection: connection,
+  movie: Movie,
+  genre: Genre,
+  artist: Artist
+})
+const genreService = new GenreService(connection)
 const router = Router();
 
 router.get('/', (req, res, next) => findWithQuery(req,res, movieService))

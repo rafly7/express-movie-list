@@ -1,6 +1,7 @@
 const path = require('path')
 const multer = require('multer')
-const {deleteFolderRecursive, uploadFile, updateFileFirebase} = require('../../configs/firestore')
+const {uploadFile, updateFileFirebase, deleteFile} = require('../../configs/firestore')
+const {getVideoDurationInSeconds} = require('get-video-duration')
 
 let fileName;
 
@@ -18,29 +19,28 @@ const movieUpload = multer({
   storage:multerStorage,
   fileFilter: function (req, file, callback) {
     const ext = path.extname(file.originalname)
-    if(ext !== '.mp4' || ext !== '.mkv' || ext !== '.webm') {
-      return callback(null, true)
-    }
-    return callback(new Error())
+    if(ext !== '.mp4' || ext !== '.mkv' || ext !== '.webm') return callback(null, true)
   }
 }).single('movie') 
 
 const addMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
+    console.log(err)
     const movie = req.body;
     if(err) {
       res.status(400)
       res.json({message: 'failed upload'})
     } else {
       try {
+        const duration = await getVideoDurationInSeconds(path.join('uploads',req.file.filename)).then(duration => duration.toFixed(1))
         const resultUpload = await uploadFile(`./uploads/${fileName}`, req.file);
-        const addMovie = await service.addMovie(resultUpload, movie)
+        const addMovie = await service.addMovie(resultUpload, duration, movie)
         res.status(200).json(addMovie)
       } catch (e) {
         res.status(500)
         res.json({message: 'Something went wrong'})
       } finally {
-        deleteFolderRecursive()
+        deleteFile()
       }
     }
   })
@@ -69,7 +69,7 @@ const updateMovie = async (req, res, service) => {
       res.status(500)
       res.json({message: 'Something went wrong'})
     } finally {
-      deleteFolderRecursive()
+      deleteFile()
     }
   })
 }
@@ -78,9 +78,12 @@ const getAllMovieWithPagination = async (req, res, service) => {
   try {
     const page = req.params.page
     const result = await service.getAllMovieWithPagination(page)
-    res.status(200).json(result)
+    res.status(200)
+    res.json(result)
   } catch (e) {
-    res.status(500).send('Something went wrong')
+    console.log(e)
+    res.status(500)
+    res.send('Something went wrong')
   }
 }
 
@@ -133,5 +136,8 @@ module.exports = {
   voteMovie,
   unvoteMovie,
   listAllUserVote,
-  viewMovieById
+  viewMovieById,
+
+  movieUpload,
+  multerStorage,
 }
