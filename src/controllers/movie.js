@@ -46,17 +46,18 @@ const addMovie = async (req, res, service) => {
   })
 }
 
-
 const updateMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
     try {
       let movie = req.body
       let updateMovie;
       if(req.file) {
+        const duration = await getVideoDurationInSeconds(path.join('uploads',req.file.filename)).then(duration => duration.toFixed(1))
         let oldFileName = await service.getOldFileName(movie)
         const {result_url, uuid} = await updateFileFirebase(oldFileName, fileName, req.file)
         req.body.watch_url = result_url
         req.body.file_name = uuid
+        req.body.duration = parseFloat(duration)
         updateMovie = await service.updateMovie(movie)
         res.status(200)
         res.json(updateMovie)
@@ -137,7 +138,4 @@ module.exports = {
   unvoteMovie,
   listAllUserVote,
   viewMovieById,
-
-  movieUpload,
-  multerStorage,
 }
