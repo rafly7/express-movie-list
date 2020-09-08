@@ -18,15 +18,33 @@ class MovieService {
     this.connection = connection
   }
 
+  async checkArtist(artists) {
+    const [result] = await this.connection.query(`
+      select array_agg(id) ids from artist HAVING array_agg(id) @> '{${artists.toString()}}'
+    `)
+    if (result[0] !== undefined) return artists
+    throw new Error
+  }
+
+  async checkGenre(genres) {
+    const [result] = await this.connection.query(`
+      select array_agg(id) from genre HAVING array_agg(id) @> '{${genres.toString()}}'
+    `)
+    if (result[0] !== undefined) return genres
+    throw new Error
+  }
+
   async addMovie(resultUpload, duration, body) {
     let result;
     try {
+      const artists = await this.checkArtist(body.artists)
+      const genres = await this.checkGenre(body.genres)
       const {result_url, uuid} = resultUpload
       body.watch_url = result_url
       body.file_name = uuid
       body.duration = duration
-      body.artists = convertArrayString(body.artists)
-      body.genres = convertArrayString(body.genres)
+      body.artists = convertArrayString(artists)
+      body.genres = convertArrayString(genres)
       result = await this.movie.create(body)
     } catch (e) {
       logEvent.emit('APP-ERROR', {

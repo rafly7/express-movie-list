@@ -25,7 +25,6 @@ const movieUpload = multer({
 
 const addMovie = async (req, res, service) => {
   movieUpload(req, res, async (err) => {
-    console.log(err)
     const movie = req.body;
     if(err) {
       res.status(400)
@@ -37,6 +36,7 @@ const addMovie = async (req, res, service) => {
         const addMovie = await service.addMovie(resultUpload, duration, movie)
         res.status(200).json(addMovie)
       } catch (e) {
+        console.log(e)
         res.status(500)
         res.json({message: 'Something went wrong'})
       } finally {
