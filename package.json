@@ -10,10 +10,11 @@
     "prod": "cross-env NODE_ENV=production node App",
     "dev": "cross-env NODE_ENV=development node index",
     "watch:dev": "nodemon",
-    "test": "cls && cross-env NODE_ENV=test jest --coverage --runInBand --watchAll=true -- test/firestore.test.js",
+    "test": "cls && cross-env NODE_ENV=test jest --coverage --runInBand --watchAll=true -- test/db.connect.test.js",
     "coverage": "cls && cross-env NODE_ENV=test jest --maxWorkers=4 --coverage",
     "migrate": "node configs/db.migrate",
-    "migrate:test": "cross-env NODE_ENV=test node configs/db.migrate.js"
+    "migrate:test": "cross-env NODE_ENV=test node configs/db.migrate.js",
+    "sonar": "node configs/sonar.js"
   },
   "nodemonConfig": {
     "exec": "npm run dev",
@@ -55,15 +56,12 @@
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/supertest": "^2.0.10",
-    "cookiejar": "^2.1.2",
-    "ioredis-mock": "^4.21.3",
     "jest": "^26.4.2",
+    "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^2.0.4",
-    "redis-mock": "^0.51.0",
-    "sinon": "^9.0.3",
+    "sonarqube-scanner": "^2.7.0",
     "sqlite3": "^5.0.0",
-    "supertest": "^4.0.2",
-    "supertest-session": "^4.0.0"
+    "supertest": "^4.0.2"
   },
   "jest": {
     "verbose": true,

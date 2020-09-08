@@ -8,7 +8,7 @@ const path = require('path')
 jest.mock('uuid')
 jest.mock('path')
 
-describe('firibase & google storage testing', () => {
+describe('firebase & google storage testing', () => {
 
   it('Should uploadFile success',async () => {
     let bucketTest = bucket
