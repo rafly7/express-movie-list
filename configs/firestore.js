@@ -5,9 +5,8 @@ const {v4, v1} = require('uuid')
 
 const gstorage = new Storage({
   projectId: "express-movielist",
-  keyFilename: 'configs/express-movielist.json'
+  keyFilename: 'credentials-firebase.json'
 })
-
 const bucket = gstorage.bucket('express-movielist.appspot.com')
 
 const deleteFile = function (pathName = path.join('uploads/')) {

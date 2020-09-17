@@ -1,9 +1,22 @@
 const logEvent = require('../events/myEmitter')
 const Bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 class AuthService {
   constructor(Auth) {
     this.Auth = Auth;
+  }
+
+  generateToken(id, username, email) {
+    const expiresIn = 10**4
+    const accessToken = jwt.sign({
+      id: id,
+      username: username,
+      email: email
+    }, process.env.TOKEN_SECRET, {
+      expiresIn: expiresIn
+    })
+    return accessToken
   }
 
   async authAdmin(body) {
@@ -15,7 +28,8 @@ class AuthService {
       })
       const matchPassword = Bcrypt.compareSync(body.password, result.password)
       if(matchPassword) {
-        return result.id
+        const accessToken = this.generateToken(result.id, result.username, result.email)
+        return {id: result.id, token: accessToken}
       }
       throw new Error
     } catch (e) {
@@ -36,7 +50,8 @@ class AuthService {
       })
       const matchPassword = Bcrypt.compareSync(body.password, result.password)
       if(matchPassword) {
-        return result.id
+        const accessToken = this.generateToken(result.id, result.username, result.email)
+        return {id: result.id, token: accessToken}
       }
       throw new Error
     } catch (e) {

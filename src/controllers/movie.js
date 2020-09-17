@@ -2,6 +2,7 @@ const path = require('path')
 const multer = require('multer')
 const {uploadFile, updateFileFirebase, deleteFile} = require('../../configs/firestore')
 const {getVideoDurationInSeconds} = require('get-video-duration')
+const client = require('redis').createClient()
 
 let fileName;
 
@@ -36,7 +37,6 @@ const addMovie = async (req, res, service) => {
         const addMovie = await service.addMovie(resultUpload, duration, movie)
         res.status(200).json(addMovie)
       } catch (e) {
-        console.log(e)
         res.status(500)
         res.json({message: 'Something went wrong'})
       } finally {
@@ -79,10 +79,9 @@ const getAllMovieWithPagination = async (req, res, service) => {
   try {
     const page = req.params.page
     const result = await service.getAllMovieWithPagination(page)
-    res.status(200)
-    res.json(result)
+    client.setex(page, 1800, JSON.stringify(result))
+    res.status(200).json(result)
   } catch (e) {
-    console.log(e)
     res.status(500)
     res.send('Something went wrong')
   }

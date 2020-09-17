@@ -3,7 +3,7 @@ const {config} = require('dotenv')
 config()
 
 const SIX_HOURS = 1000 * 60 * 60 * 6
-const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS)
+const SESSION_ABSOLUTE_TIMEOUT = +(1000 * parseInt(process.env.SESSION_ABSOLUTE_TIMEOUT) || SIX_HOURS)
 
 const logInAdmin = (req, id) => {
   req.session.adminId = id

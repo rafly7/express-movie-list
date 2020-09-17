@@ -3,10 +3,10 @@ const {logInAdmin, logOut, logInUser} = require('../middlewares/auth')
 const authAdmin = async (req, res, service) => {
   try {
     const auth = req.body
-    const admin = await service.authAdmin(auth)
-    logInAdmin(req, admin)
+    const {id, token} = await service.authAdmin(auth)
+    logInAdmin(req, id)
     res.status(200)
-    res.json({message: 'Success authenticate as admin'})
+    res.json({token: token})
   } catch (e) {
     res.status(400).json({message: 'Incorrect email or password'})
   }
@@ -15,10 +15,10 @@ const authAdmin = async (req, res, service) => {
 const authUser = async (req, res, service) => {
   try {
     const auth = req.body
-    const user = await service.authUser(auth)
-    logInUser(req, user)
+    const {id, token} = await service.authUser(auth)
+    logInUser(req, id)
     res.status(200)
-    res.json({message: 'Success authenticate as user'})
+    res.json({token: token})
   } catch (e) {
     res.status(400).json({message: 'Incorrect email or password'})
   }

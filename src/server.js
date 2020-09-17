@@ -12,7 +12,7 @@ app.use(appRoutes)
 const server = createServer(app)
 server.on('error', function (e) {
   logEvent.emit('APP-ERROR', {
-    logTitle: 'APP-FAIED',
+    logTitle: 'APP-FAILED',
     logMessage: e
   })
 })
