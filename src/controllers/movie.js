@@ -2,6 +2,7 @@ const path = require('path')
 const multer = require('multer')
 const {uploadFile, updateFileFirebase, deleteFile} = require('../../configs/firestore')
 const {getVideoDurationInSeconds} = require('get-video-duration')
+const { InternalServer, BadRequest } = require('../errors')
 const client = require('redis').createClient()
 
 let fileName;
@@ -36,12 +37,10 @@ const addMovie = async (req, res, service) => {
         const resultUpload = await uploadFile(`./uploads/${fileName}`, req.file);
         const addMovie = await service.addMovie(resultUpload, duration, movie)
         res.status(200).json(addMovie)
-      } catch (e) {
-        res.status(500)
-        res.json({message: 'Something went wrong'})
-      } finally {
-        deleteFile()
+      } catch(e) {
+        res.status(500).json({message: 'Something went wrong'})
       }
+      deleteFile()
     }
   })
 }
@@ -66,12 +65,10 @@ const updateMovie = async (req, res, service) => {
         res.status(200)
         res.json(updateMovie)
       }
-    } catch (e) {
-      res.status(500)
-      res.json({message: 'Something went wrong'})
-    } finally {
-      deleteFile()
+    } catch {
+      res.status(500).json({message: 'Something went wrong'})
     }
+    deleteFile()
   })
 }
 
@@ -81,9 +78,8 @@ const getAllMovieWithPagination = async (req, res, service) => {
     const result = await service.getAllMovieWithPagination(page)
     client.setex(page, 1800, JSON.stringify(result))
     res.status(200).json(result)
-  } catch (e) {
-    res.status(500)
-    res.send('Something went wrong')
+  } catch {
+    throw new InternalServer('Something went wrong')
   }
 }
 
@@ -124,8 +120,8 @@ const viewMovieById = async (req, res, service) => {
     const movieId = req.params.id
     const viewMovieById = await service.viewMovieById(movieId)
     res.status(200).json(viewMovieById)
-  } catch (e) {
-    res.status(400).send('Something went wrong')
+  } catch {
+    throw new BadRequest('Something went wrong')
   }
 }
 

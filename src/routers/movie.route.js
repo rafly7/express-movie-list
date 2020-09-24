@@ -17,6 +17,7 @@ const connection = require('../../configs/db.connect')
 const {MovieVoteUser} = require('../models/movie_vote_user')
 const {cookieValidationAdmin, cookieValidationUser} = require('../middlewares/cookie-validation')
 const tokenValidation = require('../middlewares/token-validation')
+const {catchAsync} = require('../middlewares/error')
 const {cache} = require('../middlewares/cache-requests')
 
 const movieService = new MovieService({
@@ -29,8 +30,8 @@ const movieService = new MovieService({
 })
 const router = Router();
 
-router.get('/view/:id', (req, res, next) => viewMovieById(req, res, movieService))
-router.get('/page/:page',cache, (req, res, next) => getAllMovieWithPagination(req, res, movieService))
+router.get('/view/:id', catchAsync((req, res) => viewMovieById(req, res, movieService)))
+router.get('/page/:page',cache, catchAsync((req, res) => getAllMovieWithPagination(req, res, movieService)))
 
 // middleware check if token is exists
 router.use(tokenValidation)
@@ -38,6 +39,6 @@ router.get('/list-all-user-vote',cookieValidationUser, (req, res, next) => listA
 router.delete('/unvote/:id',cookieValidationUser, (req, res, next) => unvoteMovie(req, res, movieService))
 router.post('/vote/:id', cookieValidationUser, (req, res, next) => voteMovie(req, res, movieService))
 router.put('/',cookieValidationAdmin, (req, res, next) => updateMovie(req, res, movieService))
-router.post('/',cookieValidationAdmin, (req, res, next) => addMovie(req, res, movieService))
+router.post('/',cookieValidationAdmin, (req, res) => addMovie(req, res, movieService))
 
 module.exports = router;

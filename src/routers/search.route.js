@@ -13,6 +13,7 @@ const connection = require('../../configs/db.connect')
 const Movie = require('../models/movie')
 const Artist = require('../models/artist')
 const tokenValidation = require('../middlewares/token-validation')
+const {catchAsync} = require('../middlewares/error') 
 
 const movieService = new MovieService({
   connection: connection,
@@ -23,10 +24,10 @@ const movieService = new MovieService({
 const genreService = new GenreService(connection)
 const router = Router();
 
-router.get('/', (req, res, next) => findWithQuery(req,res, movieService))
+router.get('/', catchAsync((req, res) => findWithQuery(req, res, movieService)))
 router.use(tokenValidation)
-router.get('/most-voted-movie',cookieValidationAdmin, (req, res, next) => mostVotedMovie(req, res, movieService))
-router.get('/most-viewed-movie',cookieValidationAdmin, (req, res, next) => mostViewedMovie(req, res, movieService))
-router.get('/most-viewed-genre',cookieValidationAdmin, (req, res, next) => mostViewedGenre(req, res, genreService))
+router.get('/most-voted-movie',cookieValidationAdmin, catchAsync((req, res) => mostVotedMovie(req, res, movieService)))
+router.get('/most-viewed-movie',cookieValidationAdmin, catchAsync((req, res) => mostViewedMovie(req, res, movieService)))
+router.get('/most-viewed-genre',cookieValidationAdmin, catchAsync((req, res) => mostViewedGenre(req, res, genreService)))
 
 module.exports = router;

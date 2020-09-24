@@ -77,6 +77,21 @@ class AuthService {
       throw new Error
     }
   }
+
+  async registerAdmin(body) {
+    try {
+      const salt = await Bcrypt.genSalt(10)
+      body.password = await Bcrypt.hash(body.password, salt)
+      const result = await this.Auth.create(body)
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'REGISTER-ADMIN-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
 }
 
 module.exports = AuthService

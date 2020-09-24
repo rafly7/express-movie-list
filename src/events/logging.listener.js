@@ -2,17 +2,17 @@ const recordLog = require('../../configs/logger')
 const logEvent = require('./myEmitter')
 
 const loggingListener = () => {
-  logEvent.on('APP-ERROR', function (event) {
-    recordLog({logType: 'ERROR', logTitle: event.logTitle, logMessage: event.logMessage})
+  logEvent.on('APP-ERROR', e => {
+    recordLog({logType: 'ERROR', logTitle: e.logTitle, logMessage: e.logMessage})
   })
-  logEvent.on('APP-FATAL', function (event) {
-    recordLog({logType: 'FATAL', logTitle: event.logTitle, logMessage: event.logMessage})
+  logEvent.on('APP-FATAL', e => {
+    recordLog({logType: 'FATAL', logTitle: e.logTitle, logMessage: e.logMessage})
   })
-  logEvent.on('APP-INFO', function (event) {
-    recordLog({logType: 'INFO', logTitle: event.logTitle, logMessage: event.logMessage})
+  logEvent.on('APP-INFO', e => {
+    recordLog({logType: 'INFO', logTitle: e.logTitle, logMessage: e.logMessage})
   })
-  logEvent.on('APP-DEBUG', function (event) {
-    recordLog({logType: 'DEBUG', logTitle: event.logTitle, logMessage: event.logMessage})
+  logEvent.on('APP-DEBUG', e => {
+    recordLog({logType: 'DEBUG', logTitle: e.logTitle, logMessage: e.logMessage})
   })
 }
 

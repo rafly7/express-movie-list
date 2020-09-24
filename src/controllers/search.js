@@ -1,9 +1,11 @@
+const {BadRequest, InternalServer} = require('../errors')
+
 const mostViewedMovie = async (req, res, service) => {
   try {
     const mostViewedMovie = await service.mostViewedMovie()
     res.status(200).json(mostViewedMovie)
-  } catch (e) {
-    res.status(500).send('Something went wrong')
+  } catch {
+    throw new InternalServer('Something went wrong')
   }
 }
 
@@ -11,8 +13,8 @@ const mostViewedGenre = async (req, res, service) => {
   try {
     const mostViewedGenre = await service.mostViewedGenre()
     res.status(200).json(mostViewedGenre)
-  } catch (e) {
-    res.status(500).send('Something went wrong')
+  } catch {
+    throw new InternalServer('Something went wrong')
   }
 }
 
@@ -20,8 +22,8 @@ const mostVotedMovie = async (req, res, service) => {
   try {
     const mostVotedMovie = await service.mostVotedMovie()
     res.status(200).json(mostVotedMovie)
-  } catch (e) {
-    res.status(500).send('Something went wrong')
+  } catch {
+    throw new InternalServer('Something went wrong')
   }
 }
 
@@ -47,8 +49,8 @@ const findWithQuery = async (req, res, service) => {
     } else {
       res.status(400).send('Wrong query')
     }
-  } catch (e) {
-    res.status(400).send('Something went wrong')
+  } catch {
+    throw new BadRequest('Something went wrong')
   }
 }
 
