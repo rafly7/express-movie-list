@@ -1,6 +1,7 @@
 const logEvent = require('../events/myEmitter')
 const Bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { BadRequest } = require('../errors');
 
 class AuthService {
   constructor(Auth) {
@@ -87,6 +88,45 @@ class AuthService {
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'REGISTER-ADMIN-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
+
+  async getEmail(body) {
+    try {
+      const result = await this.Auth.findOne({
+        where: {
+          email: body.email
+        },
+        attributes: ['id','email','username'],
+        raw: true
+      })
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'GET-USER-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
+
+  async changePasswordUser(body) {
+    try {
+      const result = await this.Auth.findOne({
+        where: {
+          id: body.id
+        }
+      })
+      const salt = await Bcrypt.genSalt(10)
+      result.password = await Bcrypt.hash(body.password, salt)
+      result.save()
+      return result
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'CHANGE-PASSWORD-USER-SERVICE-FAILED',
         logMessage: e
       })
       throw new Error

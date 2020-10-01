@@ -22,7 +22,12 @@ const User = connection.define('user', {
   password: {
     type: Sequelize.STRING,
     allowNull: false,
-  }
+  },
+  // resetPasswordToken: {
+  //   type: Sequelize.STRING,
+  //   allowNull: true
+  // },
+
 }, {
   freezeTableName: true,
   tableName: 'user',
