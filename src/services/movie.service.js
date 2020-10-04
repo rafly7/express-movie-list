@@ -137,11 +137,13 @@ class MovieService {
       result = await this.movie.findAll({
         limit: limit,
         offset: newOffset
-      }).then(movies => {
-          return Promise.resolve(movies)
-        }
-      )
-      return {current_page: parseInt(page), total_results: dataCount, total_pages: pages, results: result}
+      }).then(data => Promise.resolve(data))
+      return {
+        current_page: Number(page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'GET-PAGINATION-MOVIE-SERVICE-FAILED',
@@ -151,16 +153,37 @@ class MovieService {
     }
   }
 
-  async findMovieWithTitle(title) {
+  async findMovieWithTitle(page, title) {
     try {
-      const result = await this.movie.findAll({
+      let limit = 5, offset = 0
+      let result = await this.movie.findAndCountAll({
         where: {
           title: {
             [Sequelize.Op.iLike]: `%${title}%`
           }
         }
       })
-      return result
+        .then(data => {
+          let pages = Math.ceil(data.count / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({dataCount: data.count, pages: pages, newOffset: offset})
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.movie.findAll({
+        limit: limit,
+        offset: newOffset,
+        where: {
+          title: {
+            [Sequelize.Op.iLike]: `%${title}%`
+          }
+        }
+      }).then(data => Promise.resolve(data))
+      return {
+        current_page: Number(page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'FIND-MOVIE-WITH-TITLE-SERVICE-FAILED',
@@ -170,16 +193,37 @@ class MovieService {
     }
   }
 
-  async findMovieWithDescription(description) {
+  async findMovieWithDescription(page, description) {
     try {
-      const result = await this.movie.findAll({
+      let limit = 5, offset = 0
+      let result = await this.movie.findAndCountAll({
         where: {
           description: {
             [Sequelize.Op.iLike]: `%${description}%`
           }
         }
       })
-      return result
+        .then(data => {
+          let pages = Math.ceil(data.count / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({dataCount: data.count, pages: pages, newOffset: offset})
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.movie.findAll({
+        limit: limit,
+        offset: newOffset,
+        where: {
+          description: {
+            [Sequelize.Op.iLike]: `%${description}%`
+          }
+        }
+      }).then(data => Promise.resolve(data))
+      return {
+        current_page: Number(page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'FIND-MOVIE-WITH-DESCRIPTION-SERVICE-FAILED',
@@ -189,23 +233,46 @@ class MovieService {
     }
   }
 
-  async findMovieWithArtists(artist) {
+  async findMovieWithArtists(page, artist) {
     try {
-      const {dataValues: {id}} = await this.artist.findOne({
+      const {id} = await this.artist.findOne({
         where: {
           name: {
             [Sequelize.Op.iLike]: artist
           }
-        }
+        },
+        attributes: ['id'],
+        raw: true
       })
-      const result = await this.movie.findAll({
+      let limit = 5, offset = 0
+      let result = await this.movie.findAndCountAll({
         where: {
           artists: {
             [Sequelize.Op.contains]: [id]
           }
         }
       })
-      return result
+        .then(data => {
+          let pages = Math.ceil(data.count / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({dataCount: data.count, pages: pages, newOffset: offset})
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.movie.findAll({
+        limit: limit,
+        offset: newOffset,
+        where: {
+          artists: {
+            [Sequelize.Op.contains]: [id] 
+          }
+        }
+      }).then(data => Promise.resolve(data))
+      return {
+        current_page: Number(page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'FIND-MOVIE-WITH-ARTISTS-SERVICE-FAILED',
@@ -215,23 +282,46 @@ class MovieService {
     }
   }
 
-  async findMovieWithGenres(genre) {
+  async findMovieWithGenres(page, genre) {
     try {
-      const {dataValues: {id}} = await this.genre.findOne({
+      const {id} = await this.genre.findOne({
         where: {
           name: {
             [Sequelize.Op.iLike]: genre
           }
-        }
+        },
+        attributes: ['id'],
+        raw: true
       })
-      const result = await this.movie.findAll({
+      let limit = 5, offset = 0
+      let result = await this.movie.findAndCountAll({
         where: {
           genres: {
             [Sequelize.Op.contains]: [id]
           }
         }
       })
-      return result
+        .then(data => {
+          let pages = Math.ceil(data.count / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({dataCount: data.count, pages: pages, newOffset: offset})
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.movie.findAll({
+        limit: limit,
+        offset: newOffset,
+        where: {
+          genres: {
+            [Sequelize.Op.contains]: [id] 
+          }
+        }
+      }).then(data => Promise.resolve(data))
+      return {
+        current_page: Number(page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',

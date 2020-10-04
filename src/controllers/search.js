@@ -29,25 +29,29 @@ const mostVotedMovie = async (req, res, service) => {
 
 const findWithQuery = async (req, res, service) => {
   try {
-    if(req.query.title) {
-      const title = req.query.title
-      const movieWithTitle = await service.findMovieWithTitle(title)
-      res.status(200)
-      res.json(movieWithTitle)
-    } else if(req.query.description) {
-      const description = req.query.description
-      const movieWithDescription = await service.findMovieWithDescription(description)
-      res.status(200).json(movieWithDescription)
-    } else if(req.query.artists) {
-      const artist = req.query.artists
-      const movieWithArtists = await service.findMovieWithArtists(artist)
-      res.status(200).json(movieWithArtists)
-    } else if(req.query.genres) {
-      const genre = req.query.genres
-      const movieWithGenres = await service.findMovieWithGenres(genre)
-      res.status(200).json(movieWithGenres)
+    if(req.query.page) {
+      const page = Number(req.query.page)
+      if(req.query.title) {
+        const title = req.query.title
+        const movieWithTitle = await service.findMovieWithTitle(page, title)
+        res.status(200).json(movieWithTitle)
+      } else if(req.query.description) {
+        const description = req.query.description
+        const movieWithDescription = await service.findMovieWithDescription(page, description)
+        res.status(200).json(movieWithDescription)
+      } else if(req.query.artist) {
+        const artist = req.query.artist
+        const movieWithArtists = await service.findMovieWithArtists(page, artist)
+        res.status(200).json(movieWithArtists)
+      } else if(req.query.genre) {
+        const genre = req.query.genre
+        const movieWithGenres = await service.findMovieWithGenres(page, genre)
+        res.status(200).json(movieWithGenres)
+      } else {
+        res.status(400).json({message: 'Wrong query'})
+      }
     } else {
-      res.status(400).send('Wrong query')
+      res.status(400).json({message: 'Wrong query'})
     }
   } catch {
     throw new BadRequest('Something went wrong')
@@ -60,3 +64,5 @@ module.exports = {
   findWithQuery,
   mostVotedMovie
 }
+
+// 02129808470
