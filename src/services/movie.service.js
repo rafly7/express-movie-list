@@ -468,6 +468,38 @@ class MovieService {
       throw new Error
     }
   }
+
+  async latestMovie(dataObj) {
+    try {
+      let limit = 5, offset = 0
+      let resultObj = await this.connection.query(`
+        SELECT DATE("createdAt") AS dates, title, description, duration, vote_count, watch_url, viewer, artists, genres FROM movie
+        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}' ORDER BY dates ${dataObj.sort_by};
+      `).then(data => {
+        const [result] = data
+        let pages = Math.ceil(result.length / limit)
+        offset = limit * (Number(dataObj.page) - 1)
+        return Promise.resolve({dataCount: result.length, pages: pages, newOffset: offset})
+      })
+      const {dataCount, pages, newOffset} = resultObj
+      const [result] = await this.connection.query(`
+        SELECT DATE("createdAt") AS dates, title, description, duration, vote_count, watch_url, viewer, artists, genres FROM movie
+        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}' ORDER BY dates ${dataObj.sort_by} LIMIT ${limit} OFFSET ${newOffset};
+      `)
+      return {
+        current_page: Number(dataObj.page),
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'LATEST-MOVIE-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
 }
 
 

@@ -29,27 +29,37 @@ const mostVotedMovie = async (req, res, service) => {
 
 const findWithQuery = async (req, res, service) => {
   try {
-    if(req.query.page) {
-      const page = Number(req.query.page)
-      if(req.query.title) {
-        const title = req.query.title
-        const movieWithTitle = await service.findMovieWithTitle(page, title)
-        res.status(200).json(movieWithTitle)
-      } else if(req.query.description) {
-        const description = req.query.description
-        const movieWithDescription = await service.findMovieWithDescription(page, description)
-        res.status(200).json(movieWithDescription)
-      } else if(req.query.artist) {
-        const artist = req.query.artist
-        const movieWithArtists = await service.findMovieWithArtists(page, artist)
-        res.status(200).json(movieWithArtists)
-      } else if(req.query.genre) {
-        const genre = req.query.genre
-        const movieWithGenres = await service.findMovieWithGenres(page, genre)
-        res.status(200).json(movieWithGenres)
-      } else {
-        res.status(400).json({message: 'Wrong query'})
+    const page = Number(req.query.page)
+    if(page && req.query.title) {
+      const title = req.query.title
+      const movieWithTitle = await service.findMovieWithTitle(page, title)
+      res.status(200).json(movieWithTitle)
+    } else if(page && req.query.description) {
+      const description = req.query.description
+      const movieWithDescription = await service.findMovieWithDescription(page, description)
+      res.status(200).json(movieWithDescription)
+    } else if(page && req.query.artist) {
+      const artist = req.query.artist
+      const movieWithArtists = await service.findMovieWithArtists(page, artist)
+      res.status(200).json(movieWithArtists)
+    } else if(page && req.query.genre) {
+      const genre = req.query.genre
+      const movieWithGenres = await service.findMovieWithGenres(page, genre)
+      res.status(200).json(movieWithGenres)
+    } else if(
+      page &&
+      req.query.primary_release_date_start &&
+      req.query.primary_release_date_end &&
+      req.query.sort_by === 'asc' || req.query.sort_by === 'desc' ? req.query.sort_by : undefined
+    ) {
+      const data = {
+        sort_by: req.query.sort_by === 'asc' || req.query.sort_by === 'desc' ? req.query.sort_by : undefined,
+        start: req.query.primary_release_date_start,
+        end: req.query.primary_release_date_end,
+        page
       }
+      const latest_movie = await service.latestMovie(data)
+      res.status(200).json(latest_movie)
     } else {
       res.status(400).json({message: 'Wrong query'})
     }
@@ -64,5 +74,3 @@ module.exports = {
   findWithQuery,
   mostVotedMovie
 }
-
-// 02129808470
