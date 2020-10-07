@@ -306,6 +306,8 @@ class MovieService {
         },
         raw: true
       })
+      console.log(result)
+      if(result === null) return []
       result = await this.movie.findAll({
         where: {
           id: {
@@ -361,8 +363,6 @@ class MovieService {
     }
   }
 }
-
-
 
 const convertArrayString = data => {
   return data.toString().split(',').map(Number)

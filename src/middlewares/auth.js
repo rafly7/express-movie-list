@@ -3,7 +3,7 @@ const {config} = require('dotenv')
 config()
 
 const SIX_HOURS = 1000 * 60 * 60 * 6
-const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT || SIX_HOURS)
+const SESSION_ABSOLUTE_TIMEOUT = +(process.env.SESSION_ABSOLUTE_TIMEOUT * 1000 || SIX_HOURS)
 
 const logInAdmin = (req, id) => {
   req.session.adminId = id
@@ -50,6 +50,7 @@ const auth = (req, res, next) => {
 
 const active = async (req, res, next) => {
   if (req.session.loggedIn) {
+    console.log(SESSION_ABSOLUTE_TIMEOUT)
     const now = Date.now()
     const { createdAt } = req.session
     if (now > createdAt + SESSION_ABSOLUTE_TIMEOUT) {
