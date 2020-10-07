@@ -1,4 +1,4 @@
-const {BadRequest, InternalServer} = require('../errors')
+const {InternalServer} = require('../errors')
 
 const mostViewedMovie = async (req, res, service) => {
   try {
@@ -40,12 +40,12 @@ const findWithQuery = async (req, res, service) => {
       res.status(200).json(movieWithDescription)
     } else if(page && req.query.artist) {
       const artist = req.query.artist
-      const movieWithArtists = await service.findMovieWithArtists(page, artist)
-      res.status(200).json(movieWithArtists)
+      const movieWithArtist = await service.findMovieWithArtist(page, artist)
+      res.status(200).json(movieWithArtist)
     } else if(page && req.query.genre) {
       const genre = req.query.genre
-      const movieWithGenres = await service.findMovieWithGenres(page, genre)
-      res.status(200).json(movieWithGenres)
+      const movieWithGenre = await service.findMovieWithGenre(page, genre)
+      res.status(200).json(movieWithGenre)
     } else if(
       page &&
       req.query.primary_release_date_start &&
@@ -58,13 +58,18 @@ const findWithQuery = async (req, res, service) => {
         end: req.query.primary_release_date_end,
         page
       }
-      const latest_movie = await service.latestMovie(data)
+      const latest_movie = await service.movieWithRangeDate(data)
       res.status(200).json(latest_movie)
+    } else if(page && Boolean(req.query.genres) == true) {
+      const data = req.body
+      const getMovieGenres = await service.findMovieWithGenre_s(page, data)
+      res.sendStatus(200)
+      // res.status(200).json(getMovieGenres)
     } else {
       res.status(400).json({message: 'Wrong query'})
     }
   } catch {
-    throw new BadRequest('Something went wrong')
+    throw new InternalServer('Something went wrong')
   }
 }
 

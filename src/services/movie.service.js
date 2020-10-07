@@ -233,7 +233,7 @@ class MovieService {
     }
   }
 
-  async findMovieWithArtists(page, artist) {
+  async findMovieWithArtist(page, artist) {
     try {
       const {id} = await this.artist.findOne({
         where: {
@@ -275,14 +275,14 @@ class MovieService {
       }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
-        logTitle: 'FIND-MOVIE-WITH-ARTISTS-SERVICE-FAILED',
+        logTitle: 'FIND-MOVIE-WITH-ARTIST-SERVICE-FAILED',
         logMessage: e
       })
       throw new Error
     }
   }
 
-  async findMovieWithGenres(page, genre) {
+  async findMovieWithGenre(page, genre) {
     try {
       const {id} = await this.genre.findOne({
         where: {
@@ -324,7 +324,7 @@ class MovieService {
       }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
-        logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',
+        logTitle: 'FIND-MOVIE-WITH-GENRE-SERVICE-FAILED',
         logMessage: e
       })
       throw new Error
@@ -469,7 +469,7 @@ class MovieService {
     }
   }
 
-  async latestMovie(dataObj) {
+  async movieWithRangeDate(dataObj) {
     try {
       let limit = 5, offset = 0
       let resultObj = await this.connection.query(`
@@ -494,7 +494,62 @@ class MovieService {
       }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
-        logTitle: 'LATEST-MOVIE-SERVICE-FAILED',
+        logTitle: 'MOVIE-WITH-RANGE-DATE-SERVICE-FAILED',
+        logMessage: e
+      })
+      throw new Error
+    }
+  }
+
+  async findMovieWithGenre_s(page, body) {
+    try {
+      // let limit = 5, offset = 0
+      // let result = await this.movie.findAndCountAll({
+      //   where: {
+      //     genres: {
+      //       [Sequelize.Op.contains]: body.artists
+      //     }
+      //   }
+      // })
+      //   .then(data => {
+      //     let pages = Math.ceil(data.count / limit)
+      //     offset = limit * (page - 1)
+      //     return Promise.resolve({
+      //       dataCount: data.count,
+      //       pages: pages,
+      //       newOffset: offset
+      //     })
+      //   })
+      // const {dataCount, pages, newOffset} = result
+      // result = await this.movie.findAll({
+      //   limit: limit,
+      //   offset: newOffset,
+      //   where: {
+      //     genres: {
+      //       [Sequelize.Op.contains]: body.artists
+      //     }
+      //   }
+      // })
+      // return {
+      //   current_page: Number(page),
+      //   total_results: dataCount,
+      //   total_pages: pages,
+      //   results: result
+      // }
+      let limit = 5, offset = 0
+      let result = await this.movie.findAndCountAll({
+        where: {
+          genres: {
+            [Sequelize.Op.contains]: body.artists
+          }
+        },
+        raw: true
+      })
+      const {count, rows} = result
+      console.log(rows)
+    } catch (e) {
+      logEvent.emit('APP-ERROR', {
+        logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',
         logMessage: e
       })
       throw new Error
