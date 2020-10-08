@@ -3,7 +3,7 @@ const {authAdmin, authAllLogout, authUser, registerUser} = require('../controlle
 const {restrict, auth} = require('../middlewares/auth')
 const Admin = require('../models/admin')
 const User = require('../models/user')
-const AuthService = require('../services/auth.service')
+const AuthService = require('../services/auth')
 const cookieParser = require('cookie-parser')
 
 const authAdminService = new AuthService(Admin)

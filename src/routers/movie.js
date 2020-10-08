@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const MovieService = require('../services/movie.service')
+const MovieService = require('../services/movie')
 const {
   addMovie,
   updateMovie,

@@ -1,6 +1,6 @@
 const {Router} = require('express')
-const MovieService = require('../services/movie.service')
-const GenreService = require('../services/genre.service')
+const MovieService = require('../services/movie')
+const GenreService = require('../services/genre')
 const {
   mostViewedGenre,
   mostViewedMovie,

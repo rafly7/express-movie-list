@@ -1,9 +1,9 @@
 const Router = require('express')
-const movieRoutes = require('./movie.route')
-const authRoutes = require('./auth.route')
-const searchRoutes = require('./search.route')
-const logRoute = require('./log.route')
-const noRoute = require('./no.route')
+const movieRoutes = require('./movie')
+const authRoutes = require('./auth')
+const searchRoutes = require('./search')
+const logRoute = require('./log')
+const noRoute = require('./no')
 
 const router = Router();
 
