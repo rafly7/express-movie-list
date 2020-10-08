@@ -414,6 +414,7 @@ class MovieService {
         },
         raw: true
       })
+      if(result === null) return []
       result = await this.movie.findAll({
         where: {
           id: {

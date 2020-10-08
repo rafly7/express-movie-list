@@ -1,8 +1,5 @@
-const {config} = require('dotenv')
+require('dotenv').config()
 const { Unauthorized, BadRequest } = require('../errors')
-
-config()
-
 const SIX_HOURS = 1000 * 60 * 60 * 6
 const SESSION_ABSOLUTE_TIMEOUT = +(1000 * parseInt(process.env.SESSION_ABSOLUTE_TIMEOUT) || SIX_HOURS)
 
