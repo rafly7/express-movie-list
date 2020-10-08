@@ -3,7 +3,6 @@ const MovieService = require('../services/movie')
 const {
   addMovie,
   updateMovie,
-  getAllMovieWithPagination,
   voteMovie,
   unvoteMovie,
   listAllUserVote,
@@ -18,7 +17,6 @@ const {MovieVoteUser} = require('../models/movie_vote_user')
 const {cookieValidationAdmin, cookieValidationUser} = require('../middlewares/cookie-validation')
 const tokenValidation = require('../middlewares/token-validation')
 const {catchAsync} = require('../middlewares/error')
-const {cache} = require('../middlewares/cache-requests')
 
 const movieService = new MovieService({
   movie: Movie,
@@ -31,7 +29,6 @@ const movieService = new MovieService({
 const router = Router();
 
 router.get('/view/:id', catchAsync((req, res) => viewMovieById(req, res, movieService)))
-router.get('/page/:page',cache, catchAsync((req, res) => getAllMovieWithPagination(req, res, movieService)))
 
 // middleware check if token is exists
 router.use(tokenValidation)

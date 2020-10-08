@@ -2,8 +2,7 @@ const path = require('path')
 const multer = require('multer')
 const {uploadFile, updateFileFirebase, deleteFile} = require('../../configs/firestore')
 const {getVideoDurationInSeconds} = require('get-video-duration')
-const { InternalServer, BadRequest } = require('../errors')
-const client = require('redis').createClient()
+const { BadRequest } = require('../errors')
 
 let fileName;
 
@@ -72,17 +71,6 @@ const updateMovie = async (req, res, service) => {
   })
 }
 
-const getAllMovieWithPagination = async (req, res, service) => {
-  try {
-    const page = req.params.page
-    const result = await service.getAllMovieWithPagination(page)
-    client.setex(page, 1800, JSON.stringify(result))
-    res.status(200).json(result)
-  } catch {
-    throw new InternalServer('Something went wrong')
-  }
-}
-
 const voteMovie = async (req, res, service) => {
   try {
     const movieId = req.params.id
@@ -128,7 +116,6 @@ const viewMovieById = async (req, res, service) => {
 module.exports = {
   addMovie,
   updateMovie,
-  getAllMovieWithPagination,
   voteMovie,
   unvoteMovie,
   listAllUserVote,

@@ -1,4 +1,5 @@
 const {InternalServer} = require('../errors')
+const client = require('redis').createClient()
 
 const mostViewedMovie = async (req, res, service) => {
   try {
@@ -63,8 +64,18 @@ const findWithQuery = async (req, res, service) => {
     } else if(page && Boolean(req.query.genres) == true) {
       const data = req.body
       const getMovieGenres = await service.findMovieWithGenre_s(page, data)
-      res.sendStatus(200)
-      // res.status(200).json(getMovieGenres)
+      res.status(200).json(getMovieGenres)
+    } else if(page) {
+      client.get(page, async function(err, data) {
+        if(err) throw err
+        if(data !== null) {
+          res.status(200).json(JSON.parse(data))
+        } else {
+          const result = await service.getAllMovieWithPagination(page)
+          client.setex(page, 1800, JSON.stringify(result))
+          res.status(200).json(result)
+        }
+      })
     } else {
       res.status(400).json({message: 'Wrong query'})
     }

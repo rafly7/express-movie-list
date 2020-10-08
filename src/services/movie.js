@@ -20,7 +20,7 @@ class MovieService {
 
   async checkArtist(artists) {
     const [result] = await this.connection.query(`
-      select array_agg(id) ids from artist HAVING array_agg(id) @> '{${artists.toString()}}'
+      select array_agg(id) from artist HAVING array_agg(id) @> '{${artists.toString()}}'
     `)
     if (result[0] !== undefined) return artists
     throw new Error
@@ -59,14 +59,16 @@ class MovieService {
   async updateMovie(body) {
     let result;
     try {
+      const artists = await this.checkArtist(body.artists)
+      const genres = await this.checkGenre(body.genres)
       result = await this.movie.findByPk(body.id)
       result.title = body.title === undefined ? result.title : body.title
       result.description = body.description === undefined ? result.description : body.description
       result.duration = body.duration === undefined ? result.duration : body.duration
       result.watch_url = body.watch_url === undefined ? result.watch_url : body.watch_url
       result.file_name = body.file_name === undefined ? result.file_name : body.file_name
-      result.artists = body.artists === undefined ? result.artists : convertArrayString(body.artists)
-      result.genres = body.genres === undefined ? result.genres : convertArrayString(body.genres)
+      result.artists = body.artists === undefined ? result.artists : convertArrayString(artists)
+      result.genres = body.genres === undefined ? result.genres : convertArrayString(genres)
       result.save()
     } catch (e) {
       logEvent.emit('APP-ERROR', {
@@ -474,18 +476,19 @@ class MovieService {
     try {
       let limit = 5, offset = 0
       let resultObj = await this.connection.query(`
-        SELECT DATE("createdAt") AS dates, title, description, duration, vote_count, watch_url, viewer, artists, genres FROM movie
-        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}' ORDER BY dates ${dataObj.sort_by};
+        SELECT COUNT(DATE("createdAt")) FROM movie
+        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}';
       `).then(data => {
         const [result] = data
-        let pages = Math.ceil(result.length / limit)
+        const dataCount = Number(result[0].count)
+        const pages = Math.ceil(dataCount / limit)
         offset = limit * (Number(dataObj.page) - 1)
-        return Promise.resolve({dataCount: result.length, pages: pages, newOffset: offset})
+        return Promise.resolve({dataCount, pages, newOffset: offset})
       })
       const {dataCount, pages, newOffset} = resultObj
       const [result] = await this.connection.query(`
-        SELECT DATE("createdAt") AS dates, title, description, duration, vote_count, watch_url, viewer, artists, genres FROM movie
-        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}' ORDER BY dates ${dataObj.sort_by} LIMIT ${limit} OFFSET ${newOffset};
+        SELECT id, DATE("createdAt") AS date, title, description, duration, vote_count, watch_url, viewer, artists, genres FROM movie
+        WHERE DATE("createdAt") BETWEEN SYMMETRIC '${dataObj.start}' AND '${dataObj.end}' ORDER BY date ${dataObj.sort_by} LIMIT ${limit} OFFSET ${newOffset};
       `)
       return {
         current_page: Number(dataObj.page),
@@ -504,50 +507,40 @@ class MovieService {
 
   async findMovieWithGenre_s(page, body) {
     try {
-      // let limit = 5, offset = 0
-      // let result = await this.movie.findAndCountAll({
-      //   where: {
-      //     genres: {
-      //       [Sequelize.Op.contains]: body.artists
-      //     }
-      //   }
-      // })
-      //   .then(data => {
-      //     let pages = Math.ceil(data.count / limit)
-      //     offset = limit * (page - 1)
-      //     return Promise.resolve({
-      //       dataCount: data.count,
-      //       pages: pages,
-      //       newOffset: offset
-      //     })
-      //   })
-      // const {dataCount, pages, newOffset} = result
-      // result = await this.movie.findAll({
-      //   limit: limit,
-      //   offset: newOffset,
-      //   where: {
-      //     genres: {
-      //       [Sequelize.Op.contains]: body.artists
-      //     }
-      //   }
-      // })
-      // return {
-      //   current_page: Number(page),
-      //   total_results: dataCount,
-      //   total_pages: pages,
-      //   results: result
-      // }
+      page = Number(page)
       let limit = 5, offset = 0
-      let result = await this.movie.findAndCountAll({
+      let result = await this.movie.count({
         where: {
           genres: {
-            [Sequelize.Op.contains]: body.artists
+            [Sequelize.Op.contains]: body.genres
           }
-        },
-        raw: true
+        }
       })
-      const {count, rows} = result
-      console.log(rows)
+        .then(dataCount => {
+          const pages = Math.ceil(dataCount / limit)
+          offset = limit * (page - 1)
+          return Promise.resolve({
+            dataCount,
+            pages,
+            newOffset: offset
+          })
+        })
+      const {dataCount, pages, newOffset} = result
+      result = await this.movie.findAll({
+        limit: limit,
+        offset: newOffset,
+        where: {
+          genres: {
+            [Sequelize.Op.contains]: body.genres
+          }
+        }
+      })
+      return {
+        current_page: page,
+        total_results: dataCount,
+        total_pages: pages,
+        results: result
+      }
     } catch (e) {
       logEvent.emit('APP-ERROR', {
         logTitle: 'FIND-MOVIE-WITH-GENRES-SERVICE-FAILED',
@@ -558,8 +551,12 @@ class MovieService {
   }
 }
 
-
-
+/**
+ * To Insert Array number Integer we must
+ * convert Array number String to
+ * create new Array nnumber Integerin mapping
+ * @param {Array} data 
+ */
 const convertArrayString = data => {
   return data.toString().split(',').map(Number)
 }
